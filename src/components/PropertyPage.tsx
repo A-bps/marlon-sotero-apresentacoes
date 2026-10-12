@@ -6,6 +6,7 @@ import { broker, type PublicProperty } from "@/data/properties";
 import { contactMessage, Footer, Logo, propertyFacts, waLink } from "./brand";
 import { LeadDialog, SectionNav, ShareDialog } from "./interactive";
 import { Amenities, Gallery, Plans } from "./modules";
+import { Story } from "./Story";
 
 type Mode = "broker" | "client";
 
@@ -17,7 +18,7 @@ export function PropertyStage({ cover, model, nome }: { cover: { src: string; al
   return (
     <div className="relative h-[420px] overflow-hidden bg-mist md:h-[min(72svh,720px)] md:min-h-[600px]" data-model={model ? "pending" : undefined}>
       {/* Slot do visualizador 3D: renderizar <Viewer3D src={model} poster={cover.src} /> aqui. */}
-      <Image src={cover.src} alt={cover.alt} fill priority sizes="100vw" className="object-cover" />
+      <Image src={cover.src} alt={cover.alt} fill priority sizes="100vw" className="stage-media object-cover" />
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/45 to-transparent" aria-hidden />
       <div className="page-x absolute inset-x-0 bottom-0 mx-auto flex max-w-[1320px] items-end justify-between gap-4 pb-5 md:pb-8">
         <p className="sr-only">Imagem principal de {nome}</p>
@@ -33,11 +34,12 @@ export function PropertyStage({ cover, model, nome }: { cover: { src: string; al
 function Section({ id, index, title, intro, children }: { id: string; index: number; title: string; intro?: string; children: ReactNode }) {
   return (
     <section id={id} aria-labelledby={`${id}-title`} className="page-x mx-auto max-w-[1320px] pt-14 md:pt-20">
-      <div className="mb-8 grid gap-3 border-t border-line pt-6 md:mb-10 md:grid-cols-12 md:gap-8">
+      <div className="relative mb-8 grid gap-3 pt-6 md:mb-10 md:grid-cols-12 md:gap-8">
+        <span aria-hidden className="reveal-line absolute inset-x-0 top-0 h-px bg-line" />
         <p className="font-display text-sm font-medium text-gold-ink tabular-nums md:col-span-2" aria-hidden>
           {String(index).padStart(2, "0")}
         </p>
-        <div className="md:col-span-10">
+        <div className="reveal md:col-span-10">
           <h2 id={`${id}-title`} className="font-display text-[22px] leading-[1.15] font-semibold text-navy md:text-[28px]">
             {title}
           </h2>
@@ -108,6 +110,7 @@ export function PropertyPage({ property: p, mode }: { property: PublicProperty; 
             Apresentação modelo: textos, imagens e plantas são ilustrativos.
           </p>
         )}
+        <div aria-hidden className="scroll-progress fixed inset-x-0 top-0 z-50 h-0.5 bg-gold" />
         <PropertyStage cover={p.capa} model={p.modelo3d} nome={p.nome} />
 
         <div className="page-x mx-auto grid max-w-[1320px] gap-8 py-10 md:py-14 lg:grid-cols-12">
@@ -143,6 +146,8 @@ export function PropertyPage({ property: p, mode }: { property: PublicProperty; 
             )}
           </div>
         </div>
+
+        {p.narrativa && <Story beats={p.narrativa} />}
 
         <SectionNav items={modules.map(({ id, label }) => ({ id, label }))} />
 

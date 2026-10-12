@@ -19,6 +19,16 @@ for (const w of [360, 768, 1440]) {
     await page.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 15000 }).catch(() => errors.push(`${w} ${name}: imagens não carregaram`));
     await page.waitForTimeout(400);
     await page.screenshot({ path: `screenshots/${name}-${w}.png`, fullPage: true });
+    if (name === "publico") {
+      // Estados intermediários do percurso (scrollytelling).
+      const beats = page.locator("[aria-label=\"Percurso pelo empreendimento\"] li");
+      for (let k = 0; k < (await beats.count()); k++) {
+        await beats.nth(k).evaluate((el) => el.scrollIntoView({ block: "center" }));
+        await page.waitForTimeout(1100);
+        await page.screenshot({ path: `screenshots/percurso-${w}-${k + 1}.png` });
+      }
+      await page.evaluate(() => window.scrollTo(0, 0));
+    }
     if (w === 360) {
       const h = await page.evaluate(() => document.body.scrollHeight);
       for (let y = 0, k = 1; y < h; y += 1800, k++)

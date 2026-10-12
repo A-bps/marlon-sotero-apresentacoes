@@ -20,7 +20,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // Renderização por requisição: necessária para o nonce da CSP (ver src/proxy.ts).
   await connection();
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${outfit.variable}`}>
+    <html lang="pt-BR" suppressHydrationWarning className={`${inter.variable} ${outfit.variable}`}>
       <body>
         <a href="#conteudo" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-navy focus:px-4 focus:py-3 focus:text-white">
           Pular para o conteúdo

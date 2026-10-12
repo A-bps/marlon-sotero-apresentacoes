@@ -38,6 +38,9 @@ export type PointOfInterest = { nome: string; categoria: string; distancia: stri
 
 export type TourScene = { nome: string; imagem: string };
 
+/** Cena do percurso (scrollytelling): uma imagem e uma frase curta. */
+export type Beat = { titulo: string; texto: string; imagem: string; alt: string };
+
 export type Property = {
   slug: string;
   nome: string;
@@ -61,6 +64,8 @@ export type Property = {
   amenities: Amenity[];
   pontos: PointOfInterest[];
   tour?: TourScene[];
+  /** Percurso narrativo opcional (fachada → ambientes → lazer → localização). */
+  narrativa?: Beat[];
 };
 
 export const broker = {
@@ -122,6 +127,12 @@ const properties: Property[] = [
       { id: "jardim", nome: "Jardim e praça", descricao: "Paisagismo com espécies nativas, caminhos de pedestres e bancos sombreados.", imagem: img("paisagismo.jpg"), alt: "Jardim com caminhos e vegetação", ativo: true },
       { id: "spa", nome: "Spa (em definição)", descricao: "Item ainda não confirmado.", imagem: img("sala2.jpg"), alt: "", ativo: false },
     ],
+    narrativa: [
+      { titulo: "A chegada", texto: "Volumes brancos, panos de vidro e a piscina como primeiro plano. A fachada se apresenta antes da porta.", imagem: img("fachada.jpg"), alt: "Fachada contemporânea branca com piscina em primeiro plano" },
+      { titulo: "Viver por dentro", texto: "Estar, jantar e cozinha em um só ambiente, abertos para a luz do dia e para a varanda.", imagem: img("sala.jpg"), alt: "Sala de estar integrada com sofá claro e grandes aberturas" },
+      { titulo: "O lazer em casa", texto: "Piscina com deck, academia e jardim: o fim de semana começa no térreo.", imagem: img("piscina.jpg"), alt: "Piscina externa cercada por deck e vegetação" },
+      { titulo: "O entorno", texto: "Mercado a seis minutos a pé, escola e hospital a poucos minutos de carro.", imagem: img("paisagismo.jpg"), alt: "Caminho arborizado em área verde" },
+    ],
     pontos: [
       { nome: "Supermercado", categoria: "Serviços", distancia: "450 m", tempo: "6 min a pé", ativo: true },
       { nome: "Escola de ensino fundamental", categoria: "Educação", distancia: "900 m", tempo: "3 min de carro", ativo: true },
@@ -176,6 +187,7 @@ function toPublic(p: Property): PublicProperty {
     amenities: p.amenities.filter((a) => a.ativo),
     pontos: p.pontos.filter((pt) => pt.ativo),
     tour: p.tour?.length ? p.tour : undefined,
+    narrativa: p.narrativa?.length ? p.narrativa : undefined,
   };
 }
 
