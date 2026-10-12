@@ -1,0 +1,2420 @@
+DOCUMENTO DE ESCOPO E PLANEJAMENTO DA PRIMEIRA VERSÃO
+PLATAFORMA DE APRESENTAÇÃO IMOBILIÁRIA PARA CORRETORES
+====================================================================
+
+Versão: 1.0
+Escopo: somente a primeira versão do produto
+Base: escopo funcional revisado
+
+Este documento organiza a primeira versão em seis modelos de trabalho:
+
+1. PRD — Product Requirements Document
+2. TRD — Technical Requirements Document
+3. Fluxo completo do aplicativo
+4. Briefing de design e interface
+5. Esquema de back-end e banco de dados
+6. Plano de implementação e testes
+
+Não fazem parte deste documento: módulos de vendas, fluxo financeiro, espelho de vendas, CRM, ERP, login do corretor ou cadastro autônomo de novos empreendimentos.
+
+
+====================================================================
+1. PRD — PRODUCT REQUIREMENTS DOCUMENT
+====================================================================
+
+1.1 Nome de trabalho
+
+Plataforma de Apresentação Imobiliária para Corretores.
+
+Nome comercial definitivo: será definido posteriormente.
+
+
+1.2 O que é o produto
+
+É uma aplicação web que permite ao corretor acessar uma página inicial com os empreendimentos contratados e abrir uma experiência interativa específica para cada projeto.
+
+A experiência poderá conter modelo 3D, localização, galeria, plantas, amenities, tour e demais materiais fornecidos para aquele empreendimento.
+
+O corretor poderá copiar um link público do empreendimento e enviá-lo ao cliente. O cliente abrirá esse link diretamente no navegador, sem instalar aplicativo e sem visualizar a tela inicial com os outros empreendimentos do corretor.
+
+O produto será uma única aplicação hospedada em um único domínio. Cada empreendimento será uma configuração e uma página dentro dessa aplicação.
+
+
+1.3 Problema que o produto resolve
+
+O corretor normalmente envia PDF, imagens, vídeos separados ou links diferentes para apresentar um empreendimento. Esse processo pode ser fragmentado, pouco visual e menos memorável.
+
+A aplicação centraliza a apresentação em uma experiência navegável, permitindo que o corretor envie um único link para o cliente explorar o projeto.
+
+Problemas específicos:
+
+- Excesso de arquivos enviados separadamente.
+- Dificuldade de apresentar um empreendimento antes de uma reunião.
+- Baixa diferenciação entre corretores.
+- Cliente sem uma visão integrada do projeto.
+- Falta de uma página personalizada para cada empreendimento.
+- Dificuldade de associar o contato do cliente ao corretor que enviou a apresentação.
+
+
+1.4 Público-alvo principal
+
+Corretor de imóveis que:
+
+- Trabalha com lançamentos ou empreendimentos diferenciados.
+- Precisa enviar apresentações aos clientes.
+- Quer se diferenciar de outros corretores.
+- Atua com um ou mais empreendimentos contratados.
+- Não quer ou não precisa cadastrar o projeto sozinho.
+- Prefere solicitar a criação de uma nova apresentação ao responsável pela plataforma.
+
+
+1.5 Usuário principal: corretor
+
+O corretor acessa uma URL própria, sem login e senha na primeira versão.
+
+Exemplo:
+
+    https://app.suamarca.com.br/corretor/joao
+
+Ele visualiza os empreendimentos publicados para ele, abre cada projeto, explora a experiência e copia o link público.
+
+O corretor não edita o conteúdo no sistema. Alterações, correções e novos empreendimentos serão solicitados diretamente ao responsável pela plataforma.
+
+
+1.6 Usuário secundário: cliente
+
+O cliente recebe uma URL pública enviada pelo corretor.
+
+Exemplo:
+
+    https://app.suamarca.com.br/p/aurora?corretor=joao
+
+O cliente não precisa criar conta, não precisa informar senha e não precisa instalar aplicativo.
+
+Ele poderá:
+
+- Abrir a apresentação.
+- Explorar o modelo 3D ou imagem principal.
+- Abrir galeria.
+- Consultar localização.
+- Abrir plantas.
+- Explorar amenities.
+- Abrir tour quando disponível.
+- Falar com o corretor.
+- Enviar formulário de interesse.
+
+
+1.7 Responsável pela implantação dos projetos
+
+O responsável pela plataforma será quem criará e publicará os empreendimentos.
+
+O corretor não terá botão “Adicionar empreendimento”.
+
+Para adicionar um novo empreendimento:
+
+1. O corretor entra em contato.
+2. Os materiais são recebidos.
+3. O projeto é modelado e configurado.
+4. A página é criada.
+5. O empreendimento é associado ao corretor.
+6. O projeto é publicado na tela inicial.
+
+
+1.8 Objetivos funcionais
+
+A primeira versão deverá permitir:
+
+- Identificar o corretor pela URL.
+- Exibir os empreendimentos contratados.
+- Abrir o empreendimento selecionado.
+- Carregar conteúdo específico do projeto.
+- Exibir o modelo 3D quando disponível.
+- Exibir fallback visual quando não houver 3D.
+- Exibir galerias.
+- Exibir localização.
+- Exibir plantas.
+- Exibir amenities.
+- Exibir tour ou panorama quando disponível.
+- Gerar/copiar link público.
+- Enviar link por WhatsApp.
+- Associar o cliente ao corretor do link.
+- Receber formulário de interesse.
+- Registrar o lead no banco de dados.
+- Funcionar em computador, tablet e celular.
+
+
+1.9 O que o cliente escolhe dentro da aplicação
+
+O cliente poderá escolher, dentro da experiência pública:
+
+- Visão geral.
+- Modelo 3D.
+- Vista frontal, lateral, posterior ou aérea, se configuradas.
+- Galeria.
+- Categoria da galeria.
+- Localização.
+- Categoria de ponto de interesse, se configurada.
+- Planta ou tipologia.
+- Amenity.
+- Ambiente do tour.
+
+O cliente não escolherá:
+
+- Entre os empreendimentos do corretor.
+- Fluxo de pagamento.
+- Condição comercial interna.
+- Unidade disponível para reserva.
+- Desconto.
+- Comissão.
+- Dados privados.
+
+
+1.10 O que o cliente faz dentro da aplicação
+
+O caminho principal do cliente será:
+
+1. Receber o link.
+2. Clicar no link.
+3. Abrir a experiência do empreendimento.
+4. Visualizar a capa ou modelo principal.
+5. Explorar o 3D por toque, arraste ou botões.
+6. Abrir localização.
+7. Abrir galeria.
+8. Abrir plantas.
+9. Explorar amenities.
+10. Abrir tour, se houver.
+11. Clicar em “Falar com o corretor” ou “Quero saber mais”.
+12. Abrir WhatsApp ou preencher formulário.
+
+
+1.11 O que fica fora do aplicativo na primeira versão
+
+Não estarão presentes:
+
+- Login do corretor.
+- Senha do corretor.
+- Cadastro de novos empreendimentos pelo corretor.
+- Upload de arquivos pelo corretor.
+- Painel administrativo do corretor.
+- Fluxo de pagamento.
+- Preços internos.
+- Espelho de vendas.
+- Status de unidades.
+- Reserva de unidade.
+- Compra online.
+- Assinatura digital.
+- CRM.
+- ERP.
+- Integração de estoque.
+- Chat interno.
+- Área privada do cliente.
+- Sistema de comissão.
+- Pagamento dentro do site.
+- Checkout.
+- Tela de gestão de leads para o corretor.
+- Editor visual para o corretor.
+
+
+1.12 Decisão sobre login
+
+Não haverá login e senha na primeira versão.
+
+O acesso do corretor será feito por uma URL personalizada, por exemplo:
+
+    /corretor/joao
+
+A URL será suficiente para abrir a tela com os empreendimentos contratados.
+
+Como não haverá autenticação, a aplicação não deverá armazenar nem exibir informações confidenciais nessa área.
+
+
+1.13 Decisão sobre pagamento
+
+Não haverá pagamento dentro da aplicação.
+
+O cliente não comprará imóvel, não pagará sinal e não fará checkout pelo site.
+
+O botão de contato servirá para iniciar conversa com o corretor.
+
+
+1.14 Resultado esperado
+
+O corretor deverá conseguir enviar uma apresentação com aparência profissional usando um único link.
+
+O cliente deverá conseguir explorar o projeto no navegador e encontrar uma forma clara de falar com o corretor.
+
+
+====================================================================
+2. TRD — TECHNICAL REQUIREMENTS DOCUMENT
+====================================================================
+
+2.1 Arquitetura geral
+
+A primeira versão terá:
+
+- Um frontend web.
+- Um backend/API.
+- Um banco de dados relacional.
+- Um armazenamento de arquivos.
+- Um domínio principal.
+- Uma hospedagem centralizada.
+- Um provedor de mapas.
+- WhatsApp por link externo.
+- Serviço de e-mail para encaminhamento de leads, se configurado.
+
+Diagrama:
+
+    Navegador do corretor
+            |
+            v
+    URL /corretor/{slug}
+            |
+            v
+    Frontend web
+            |
+            v
+    API / Backend
+       |       |       |
+       v       v       v
+    Banco   Storage   Mapa
+       |
+       v
+    Leads / eventos
+
+    Link público do cliente
+            |
+            v
+    URL /p/{empreendimento}?corretor={corretor}
+            |
+            v
+    Mesma aplicação, conteúdo público
+
+
+2.2 Stack recomendada
+
+Frontend:
+
+- TypeScript.
+- React.
+- Next.js.
+- CSS Modules ou Tailwind CSS.
+- React Three Fiber.
+- Three.js.
+
+Backend:
+
+- Node.js.
+- TypeScript.
+- Route Handlers do Next.js.
+- API REST interna.
+
+Banco:
+
+- PostgreSQL.
+
+Storage:
+
+- Cloudflare R2, Amazon S3 ou Supabase Storage.
+
+Hospedagem:
+
+- Vercel para a aplicação Next.js.
+- Supabase, Neon ou PostgreSQL gerenciado para o banco.
+- Cloudflare R2 ou S3 para modelos 3D, imagens, plantas e vídeos.
+
+Mapas:
+
+- Mapbox ou Google Maps.
+- A escolha deverá considerar custo, limite de uso e aparência desejada.
+
+
+2.3 Domínio e hospedagem
+
+Domínio principal de exemplo:
+
+    app.suamarca.com.br
+
+A aplicação inteira ficará nesse domínio.
+
+As páginas serão rotas, não hospedagens independentes:
+
+    /corretor/joao
+    /corretor/joao/empreendimento/aurora
+    /p/aurora?corretor=joao
+
+Não será criada uma hospedagem separada para cada projeto.
+
+O modelo 3D e os arquivos grandes deverão ficar em storage/CDN, não dentro do pacote principal da aplicação.
+
+
+2.4 Login e autenticação
+
+Decisão da primeira versão:
+
+- Não haverá login.
+- Não haverá senha.
+- Não haverá sessão de usuário.
+- Não haverá recuperação de senha.
+- Não haverá painel protegido.
+
+A identificação do corretor será feita pelo slug presente na URL.
+
+Exemplo:
+
+    /corretor/joao
+
+O sistema consulta o corretor cujo slug é “joao” e carrega seus projetos.
+
+A ausência de login implica as seguintes regras:
+
+- Não armazenar dados comerciais privados.
+- Não mostrar comissão.
+- Não mostrar fluxo financeiro.
+- Não permitir ações administrativas pela interface pública.
+- Não permitir edição pelo corretor.
+
+
+2.5 Pagamento
+
+Não haverá pagamento no site.
+
+Não haverá:
+
+- Stripe.
+- Mercado Pago.
+- Checkout.
+- Carrinho.
+- Assinatura.
+- Compra de produto.
+- Reserva de imóvel.
+
+A contratação do serviço de criação de novos empreendimentos ocorrerá fora da aplicação, por contato direto entre o corretor e o responsável pela plataforma.
+
+
+2.6 Integrações da primeira versão
+
+Integração 1 — WhatsApp:
+
+Será usado um link no formato wa.me para abrir conversa com o corretor.
+
+Exemplo:
+
+    https://wa.me/5511999999999?text=...
+
+Integração 2 — Mapas:
+
+Será usado um provedor de mapas para mostrar localização e, se configurado, pontos de interesse.
+
+Integração 3 — E-mail:
+
+O formulário de interesse poderá enviar uma notificação por e-mail ao responsável configurado.
+
+Integração 4 — Storage/CDN:
+
+Os arquivos do empreendimento serão carregados de um storage externo otimizado.
+
+Não haverá integração com CRM ou ERP na primeira versão.
+
+
+2.7 Contrato mínimo das rotas
+
+Rota da tela do corretor:
+
+    GET /corretor/{corretorSlug}
+
+Resposta esperada:
+
+- Dados públicos do corretor.
+- Lista de empreendimentos publicados.
+
+Rota do empreendimento para o corretor:
+
+    GET /corretor/{corretorSlug}/empreendimento/{empreendimentoSlug}
+
+Resposta esperada:
+
+- Dados públicos do corretor.
+- Dados do empreendimento.
+- Módulos disponíveis.
+- URLs dos assets.
+- Configuração visual.
+
+Rota pública:
+
+    GET /p/{empreendimentoSlug}?corretor={corretorSlug}
+
+Resposta esperada:
+
+- Dados públicos do empreendimento.
+- Dados públicos do corretor.
+- Link de contato.
+- Módulos públicos.
+
+Envio do lead:
+
+    POST /api/leads
+
+Campos mínimos:
+
+- corretor_id.
+- empreendimento_id.
+- nome.
+- telefone.
+- email opcional.
+- mensagem opcional.
+- consentimento.
+- origem.
+
+Registro de evento:
+
+    POST /api/eventos
+
+Campos mínimos:
+
+- empreendimento_id.
+- corretor_id opcional.
+- tipo_evento.
+- secao.
+- sessao_id.
+- dispositivo.
+
+
+2.8 Estados das rotas
+
+Projeto publicado:
+
+- Renderiza normalmente.
+
+Projeto não encontrado:
+
+- Exibe página 404 amigável.
+
+Projeto pausado:
+
+- Exibe mensagem de indisponibilidade.
+
+Corretor não encontrado:
+
+- Exibe página de acesso inválido.
+
+Lead enviado:
+
+- Retorna confirmação visual.
+
+Erro no envio do lead:
+
+- Retorna mensagem de erro e mantém os dados preenchidos no formulário.
+
+Modelo 3D indisponível:
+
+- Exibe imagem de fallback.
+
+
+2.9 Requisitos de performance
+
+- O carregamento inicial não deverá baixar todos os modelos 3D.
+- A tela inicial carregará somente capas e dados básicos dos projetos.
+- O modelo 3D será carregado quando o usuário abrir o empreendimento.
+- Imagens deverão possuir miniaturas.
+- Modelos deverão ser comprimidos.
+- O sistema deverá mostrar estado de carregamento.
+- O sistema deverá mostrar fallback quando o 3D falhar.
+- A primeira tela deverá aparecer antes do carregamento de assets pesados.
+
+
+2.10 Requisitos de responsividade
+
+Desktop:
+
+- Cards lado a lado.
+- Menu horizontal.
+- Visualizador 3D amplo.
+
+Tablet:
+
+- Cards em duas colunas ou carrossel.
+- Controles de toque.
+
+Celular:
+
+- Cards empilhados ou carrossel.
+- Menu interno recolhível.
+- Botões grandes.
+- WhatsApp destacado.
+- Controles de 3D adaptados para toque.
+
+
+====================================================================
+3. FLUXO COMPLETO DO APLICATIVO
+====================================================================
+
+3.1 Mapa de telas
+
+Tela A — Início do corretor
+
+Rota:
+
+    /corretor/{corretorSlug}
+
+Entradas:
+
+- URL recebida pelo corretor.
+
+Saídas:
+
+- Clique em empreendimento.
+- Clique em WhatsApp.
+- Clique em copiar link.
+
+Tela B — Empreendimento no contexto do corretor
+
+Rota:
+
+    /corretor/{corretorSlug}/empreendimento/{empreendimentoSlug}
+
+Entradas:
+
+- Clique no card.
+- Clique na aba do empreendimento.
+
+Saídas:
+
+- Abrir módulos.
+- Compartilhar.
+- Voltar.
+
+Tela C — Empreendimento no contexto do cliente
+
+Rota:
+
+    /p/{empreendimentoSlug}?corretor={corretorSlug}
+
+Entradas:
+
+- Link recebido por WhatsApp, e-mail ou outro canal.
+
+Saídas:
+
+- Abrir módulos públicos.
+- Falar com corretor.
+- Enviar formulário.
+
+Tela D — Modal de galeria
+
+Abertura:
+
+- Clique no menu Galeria.
+- Clique em uma miniatura.
+
+Saída:
+
+- Fechar modal.
+- Próxima/anterior.
+
+Tela E — Mapa
+
+Abertura:
+
+- Clique em Localização.
+
+Saída:
+
+- Abrir mapa externo.
+- Retornar ao empreendimento.
+
+Tela F — Plantas
+
+Abertura:
+
+- Clique em Plantas.
+
+Saída:
+
+- Filtrar tipologia.
+- Ampliar planta.
+- Baixar se autorizado.
+- Fechar visualizador.
+
+Tela G — Amenities
+
+Abertura:
+
+- Clique em Amenities.
+
+Saída:
+
+- Escolher amenity.
+- Ver conteúdo.
+- Voltar à lista.
+
+Tela H — Tour
+
+Abertura:
+
+- Clique em Tour.
+
+Saída:
+
+- Escolher ambiente.
+- Avançar.
+- Voltar.
+- Fechar tour.
+
+Modal I — Compartilhamento
+
+Abertura:
+
+- Clique em “Compartilhar com cliente”.
+
+Saída:
+
+- Copiar link.
+- Abrir WhatsApp.
+- Fechar modal.
+
+Modal J — Formulário de lead
+
+Abertura:
+
+- Clique em “Falar com corretor”.
+- Clique em “Quero saber mais”.
+
+Saída:
+
+- Enviar formulário.
+- Fechar formulário.
+
+
+3.2 Fluxo do corretor — entrada
+
+1. O corretor abre sua URL principal.
+2. A aplicação identifica o slug do corretor.
+3. O backend busca o corretor ativo.
+4. O backend busca os empreendimentos publicados desse corretor.
+5. A tela inicial é renderizada.
+6. Os cards são exibidos.
+
+Se o slug não existir:
+
+- O sistema exibe “Corretor não encontrado”.
+
+Se não houver projetos publicados:
+
+- O sistema exibe “Nenhum empreendimento disponível”.
+- O contato do responsável pela plataforma poderá ser exibido.
+
+
+3.3 Fluxo do corretor — abrir projeto pelo card
+
+1. O corretor vê o card do projeto.
+2. Clica em “Ver empreendimento”.
+3. O navegador muda para a rota do projeto.
+4. O backend busca os dados pelo slug.
+5. O frontend carrega o cabeçalho.
+6. O frontend carrega os módulos disponíveis.
+7. O visualizador 3D começa a carregar, se existir.
+8. O corretor pode interagir com a página.
+
+
+3.4 Fluxo do corretor — abrir projeto pela aba superior
+
+1. O corretor vê as abas no menu superior.
+2. Clica no nome do projeto.
+3. O navegador navega para a rota desse projeto.
+4. A tela anterior permanece no histórico do navegador.
+5. A seta nativa de voltar pode retornar à tela anterior.
+
+
+3.5 Fluxo do corretor — copiar link geral
+
+1. O corretor está na tela do projeto.
+2. Clica em “Compartilhar com cliente”.
+3. Abre o modal de compartilhamento.
+4. O sistema monta a URL pública.
+5. A URL recebe o slug do empreendimento e o slug do corretor.
+6. O corretor clica em “Copiar link”.
+7. O navegador copia a URL.
+8. O botão muda temporariamente para “Link copiado”.
+9. O corretor fecha o modal ou abre o WhatsApp.
+
+
+3.6 Fluxo do corretor — enviar pelo WhatsApp
+
+1. O corretor abre o modal.
+2. Clica em “Enviar pelo WhatsApp”.
+3. O sistema cria a mensagem.
+4. O sistema abre o WhatsApp Web ou aplicativo.
+5. O corretor escolhe o contato.
+6. O corretor confirma o envio dentro do WhatsApp.
+
+O site não enviará a mensagem sem a ação final do corretor no WhatsApp.
+
+
+3.7 Fluxo do cliente — abrir link
+
+1. O cliente recebe o link.
+2. Clica no link.
+3. O navegador abre a rota pública.
+4. A aplicação identifica o empreendimento.
+5. A aplicação identifica o corretor pelo parâmetro.
+6. O backend retorna somente conteúdo público.
+7. O cabeçalho público é exibido.
+8. A visão geral do empreendimento é exibida.
+9. O menu geral de projetos não é exibido.
+10. O botão “Voltar para empreendimentos” não é exibido.
+
+
+3.8 Fluxo do cliente — explorar 3D
+
+1. O cliente vê o visualizador.
+2. O modelo começa a carregar.
+3. Enquanto carrega, aparece o indicador.
+4. Quando termina, o modelo fica interativo.
+5. O cliente arrasta para girar.
+6. O cliente usa pinça ou rolagem para zoom.
+7. O cliente pode clicar em vista frontal, lateral, posterior ou aérea.
+8. O cliente pode clicar em tela cheia.
+9. O sistema registra eventos de interação.
+
+
+3.9 Fluxo do cliente — galeria
+
+1. O cliente clica em Galeria.
+2. A galeria é aberta.
+3. O cliente vê miniaturas.
+4. Clica em uma imagem.
+5. A imagem abre em destaque.
+6. O cliente pode avançar ou voltar.
+7. O cliente fecha a galeria.
+8. O sistema retorna ao estado anterior.
+
+
+3.10 Fluxo do cliente — plantas
+
+1. O cliente clica em Plantas.
+2. O sistema lista as plantas públicas.
+3. O cliente escolhe uma tipologia.
+4. A lista é filtrada.
+5. O cliente abre a planta.
+6. O visualizador permite zoom.
+7. O cliente fecha a planta.
+8. O sistema retorna à lista.
+
+
+3.11 Fluxo do cliente — localização
+
+1. O cliente clica em Localização.
+2. O mapa é carregado.
+3. O marcador do empreendimento aparece.
+4. O endereço é exibido.
+5. Os pontos cadastrados aparecem.
+6. O cliente pode clicar em um ponto.
+7. O cliente pode clicar em “Abrir no mapa externo”.
+8. O navegador abre o provedor de mapas.
+
+
+3.12 Fluxo do cliente — amenities
+
+1. O cliente clica em Amenities.
+2. O sistema mostra a lista.
+3. O cliente clica em uma amenity.
+4. A imagem ou panorama é aberto.
+5. A descrição é exibida.
+6. O cliente pode clicar em “Ver no modelo”, quando houver coordenada.
+7. O cliente pode voltar à lista.
+
+
+3.13 Fluxo do cliente — contato via WhatsApp
+
+1. O cliente clica em “Falar com corretor”.
+2. O sistema identifica o WhatsApp vinculado ao corretor.
+3. O sistema monta uma mensagem com o empreendimento.
+4. O WhatsApp abre.
+5. O cliente envia a mensagem pelo WhatsApp.
+
+
+3.14 Fluxo do cliente — formulário
+
+1. O cliente clica em “Quero saber mais”.
+2. O modal abre.
+3. O cliente informa nome.
+4. O cliente informa telefone.
+5. O cliente informa e-mail, se quiser.
+6. O cliente escreve uma mensagem, se quiser.
+7. O cliente marca consentimento.
+8. O cliente clica em “Enviar”.
+9. O frontend valida os campos.
+10. A API recebe os dados.
+11. O backend salva o lead.
+12. O backend dispara e-mail, se configurado.
+13. O sistema exibe confirmação.
+
+
+3.15 Fluxo de erro do formulário
+
+Se nome estiver vazio:
+
+- Exibir “Informe seu nome”.
+- Não enviar a requisição.
+
+Se telefone estiver vazio:
+
+- Exibir “Informe seu telefone ou WhatsApp”.
+- Não enviar a requisição.
+
+Se o backend falhar:
+
+- Exibir mensagem de erro.
+- Manter os dados no formulário.
+- Permitir tentar novamente.
+
+
+====================================================================
+4. BRIEFING DE DESIGN E INTERFACE
+====================================================================
+
+4.1 Direção visual
+
+A interface deverá transmitir:
+
+- Arquitetura.
+- Sofisticação.
+- Clareza.
+- Exclusividade.
+- Tecnologia.
+- Segurança.
+- Conforto.
+
+A interface não deverá competir com o modelo 3D e as imagens. Os controles precisam ser discretos, mas facilmente reconhecíveis.
+
+
+4.2 Paleta base recomendada
+
+A paleta abaixo é a base da plataforma. Cada empreendimento poderá possuir imagens próprias, mas a estrutura de interface deverá manter consistência.
+
+Cor de fundo principal:
+
+    #0F1115
+
+Uso:
+
+- Fundo da tela inicial.
+- Fundo de áreas de navegação.
+- Fundo de modais escuros.
+
+Cor de superfície:
+
+    #181C23
+
+Uso:
+
+- Cards.
+- Painéis.
+- Menu lateral.
+- Modal.
+
+Cor de superfície elevada:
+
+    #232936
+
+Uso:
+
+- Card em hover.
+- Item selecionado.
+- Painel ativo.
+
+Cor de texto principal:
+
+    #F5F7FA
+
+Uso:
+
+- Títulos.
+- Nomes dos empreendimentos.
+- Botões principais.
+
+Cor de texto secundário:
+
+    #AEB6C2
+
+Uso:
+
+- Descrições.
+- Legendas.
+- Informações complementares.
+
+Cor de texto discreto:
+
+    #7C8796
+
+Uso:
+
+- Metadados.
+- Instruções secundárias.
+
+Cor de destaque principal:
+
+    #C9A66B
+
+Uso:
+
+- Botão principal.
+- Linha ativa.
+- Destaque de empreendimento.
+- Hover de elementos importantes.
+
+Cor de destaque clara:
+
+    #E2C28E
+
+Uso:
+
+- Hover do botão principal.
+- Ícones ativos.
+- Títulos de seção selecionados.
+
+Cor de sucesso:
+
+    #3DBB82
+
+Uso:
+
+- “Link copiado”.
+- Lead enviado.
+- Confirmações.
+
+Cor de erro:
+
+    #E26D75
+
+Uso:
+
+- Erro de formulário.
+- Falha de carregamento.
+- Projeto indisponível.
+
+Cor de borda:
+
+    #303746
+
+Uso:
+
+- Cards.
+- Campos.
+- Separadores.
+
+Overlay escuro:
+
+    rgba(0, 0, 0, 0.64)
+
+Uso:
+
+- Modal.
+- Galeria ampliada.
+- Menu sobre o 3D.
+
+
+4.3 Tipografia
+
+Fonte principal recomendada:
+
+    Inter
+
+Uso:
+
+- Menus.
+- Botões.
+- Campos.
+- Informações técnicas.
+
+Fonte de destaque opcional:
+
+    Playfair Display
+
+Uso restrito:
+
+- Nome do empreendimento.
+- Frase institucional.
+- Títulos de abertura.
+
+Não usar Playfair Display em botões, campos ou textos longos.
+
+Pesos:
+
+- Regular: 400.
+- Medium: 500.
+- Semibold: 600.
+- Bold: 700.
+
+Tamanhos desktop:
+
+- Título principal: 40 px.
+- Título de empreendimento: 32 px.
+- Título de seção: 24 px.
+- Subtítulo: 18 px.
+- Texto padrão: 16 px.
+- Texto secundário: 14 px.
+- Texto auxiliar: 12 px.
+- Botão: 14 ou 15 px.
+
+Tamanhos mobile:
+
+- Título principal: 28 px.
+- Título de empreendimento: 24 px.
+- Título de seção: 20 px.
+- Subtítulo: 16 px.
+- Texto padrão: 15 px.
+- Texto secundário: 13 px.
+- Texto auxiliar: 12 px.
+
+Altura de linha:
+
+- Títulos: 1.15.
+- Textos: 1.5.
+- Botões: 1.2.
+
+
+4.4 Sistema de espaçamento
+
+Unidade base:
+
+    4 px
+
+Escala:
+
+- 4 px: distância mínima entre ícone e texto.
+- 8 px: espaçamento interno pequeno.
+- 12 px: espaçamento de controle.
+- 16 px: espaçamento padrão.
+- 24 px: distância entre elementos relacionados.
+- 32 px: distância entre blocos.
+- 48 px: separação de seções.
+- 64 px: margem de grandes blocos.
+
+Padding de tela:
+
+Desktop:
+
+- Lateral: 48 px.
+- Superior: 32 px.
+
+Tablet:
+
+- Lateral: 32 px.
+- Superior: 24 px.
+
+Mobile:
+
+- Lateral: 16 px.
+- Superior: 16 px.
+
+
+4.5 Botões
+
+Botão primário:
+
+- Fundo: #C9A66B.
+- Texto: #0F1115.
+- Altura desktop: 44 px.
+- Altura mobile: 48 px.
+- Padding horizontal: 20 px.
+- Border-radius: 8 px.
+- Fonte: 14 ou 15 px, peso 600.
+- Sem caixa alta obrigatória.
+- Hover: fundo #E2C28E.
+- Pressionado: reduzir brilho e aplicar escala visual de 98%.
+
+Botão secundário:
+
+- Fundo transparente.
+- Borda: 1 px solid #C9A66B.
+- Texto: #E2C28E.
+- Altura: 44 px.
+- Border-radius: 8 px.
+
+Botão fantasma:
+
+- Fundo transparente.
+- Sem borda.
+- Texto: #F5F7FA.
+- Hover: fundo rgba(255, 255, 255, 0.08).
+
+Botão de ícone:
+
+- Desktop: 40 x 40 px.
+- Mobile: 44 x 44 px.
+- Border-radius: 8 px.
+- Ícone centralizado.
+- Deve possuir tooltip ou rótulo acessível.
+
+Botão WhatsApp:
+
+- Fundo: #25D366.
+- Texto: #07150B.
+- Altura: 46 px.
+- Border-radius: 8 px.
+- Ícone à esquerda do texto.
+
+Botão de perigo:
+
+- Fundo: #E26D75.
+- Usado somente para erros ou indisponibilidade.
+
+
+4.6 Cards de empreendimentos
+
+Desktop:
+
+- Largura mínima: 280 px.
+- Altura recomendada: 360 a 440 px.
+- Border-radius: 12 px.
+- Overflow hidden.
+- Imagem ocupando a parte superior.
+- Conteúdo inferior com padding de 20 px.
+- Gap entre cards: 24 px.
+
+Imagem do card:
+
+- Proporção recomendada: 16:10.
+- Object-fit: cover.
+- Overlay escuro suave para legibilidade.
+
+Estado normal:
+
+- Fundo #181C23.
+- Borda #303746.
+
+Estado hover:
+
+- Borda #C9A66B.
+- Elevação de 4 px.
+- Transição de 180 ms.
+
+Estado pressionado:
+
+- Escala visual de 98%.
+
+
+4.7 Cabeçalho
+
+Altura desktop:
+
+    72 px
+
+Altura mobile:
+
+    64 px
+
+Padding lateral:
+
+- Desktop: 32 a 48 px.
+- Mobile: 16 px.
+
+O cabeçalho deverá permanecer visível durante a navegação, exceto em tela cheia do modelo.
+
+No modo corretor, o cabeçalho conterá:
+
+- Voltar.
+- Logo.
+- Nome do projeto.
+- Compartilhar.
+
+No modo cliente, o cabeçalho conterá:
+
+- Logo.
+- Nome do projeto.
+- Falar com corretor.
+
+
+4.8 Menu interno
+
+Desktop:
+
+- Menu horizontal ou painel lateral.
+- Altura de item: 40 px.
+- Padding horizontal: 14 px.
+- Gap: 8 px.
+
+Mobile:
+
+- Menu horizontal rolável ou botão “Menu”.
+- Altura de item: 44 px.
+- Não quebrar itens em várias linhas.
+
+Item ativo:
+
+- Texto #E2C28E.
+- Borda ou linha inferior #C9A66B.
+- Fundo rgba(201, 166, 107, 0.12).
+
+Item inativo:
+
+- Texto #AEB6C2.
+
+
+4.9 Visualizador 3D
+
+Área mínima desktop:
+
+    600 px de altura
+
+Área mínima mobile:
+
+    420 px de altura
+
+Controles:
+
+- Posicionados na parte inferior do visualizador.
+- Fundo semitransparente.
+- Border-radius: 10 px.
+- Espaçamento interno: 8 px.
+- Botões de 40 x 40 px.
+
+O modelo deve ser o foco da tela. Não colocar textos longos sobre a área principal.
+
+
+4.10 Modais
+
+Overlay:
+
+    rgba(0, 0, 0, 0.64)
+
+Modal desktop:
+
+- Largura máxima: 560 px para formulário.
+- Largura máxima: 960 px para galeria.
+- Border-radius: 12 px.
+- Padding: 24 px.
+
+Modal mobile:
+
+- Largura: calc(100% - 24 px).
+- Padding: 20 px.
+- Border-radius: 12 px.
+
+Botão fechar:
+
+- Canto superior direito.
+- 40 x 40 px.
+
+
+4.11 Campos de formulário
+
+Altura:
+
+- Desktop: 44 px.
+- Mobile: 48 px.
+
+Borda normal:
+
+    1 px solid #303746
+
+Borda em foco:
+
+    1 px solid #C9A66B
+
+Fundo:
+
+    #181C23
+
+Texto:
+
+    #F5F7FA
+
+Placeholder:
+
+    #7C8796
+
+Espaçamento entre campos:
+
+    16 px
+
+Mensagem de erro:
+
+- Cor #E26D75.
+- Fonte 12 ou 13 px.
+- Logo abaixo do campo.
+
+
+====================================================================
+5. ESQUEMA DE BACK-END E BANCO DE DADOS
+====================================================================
+
+5.1 Princípio de funcionamento
+
+O corretor não editará diretamente o banco de dados pela interface.
+
+O responsável pela plataforma fará o cadastro e a publicação dos dados dos projetos usando procedimento interno.
+
+A aplicação pública somente consultará os dados publicados.
+
+O formulário de lead fará uma inserção controlada na tabela de leads.
+
+Eventos de navegação poderão ser registrados para medir acessos e interações.
+
+
+5.2 Diagrama de entidades
+
+    CORRETOR
+       |
+       | 1:N
+       v
+    EMPREENDIMENTO
+       |
+       | 1:N
+       +---------- MIDIA
+       |
+       +---------- AMENITY
+       |
+       +---------- PLANTA
+       |
+       +---------- PONTO_INTERESSE
+       |
+       | 1:N
+       v
+    LINK_COMPARTILHADO
+       |
+       +---------- LEAD
+       |
+       +---------- EVENTO_ACESSO
+
+
+5.3 Tabela CORRETOR
+
+Objetivo:
+
+Armazenar os dados públicos do corretor usados na página inicial, no link do cliente e no contato.
+
+Campos:
+
+- id: UUID ou bigint, chave primária.
+- nome: varchar, obrigatório.
+- slug: varchar, obrigatório, único.
+- nome_comercial: varchar, opcional.
+- foto_url: text, opcional.
+- creci: varchar, opcional.
+- telefone: varchar, opcional.
+- whatsapp: varchar, obrigatório para botão de contato.
+- email: varchar, opcional.
+- mensagem_apresentacao: text, opcional.
+- logo_url: text, opcional.
+- ativo: boolean, obrigatório, padrão true.
+- criado_em: timestamp.
+- atualizado_em: timestamp.
+
+Regras:
+
+- O slug será usado na URL.
+- O corretor deve possuir WhatsApp para habilitar o botão.
+- Corretor inativo não deve abrir a página pública.
+
+Quem pode ver:
+
+- O próprio conteúdo público pode ser visto por qualquer visitante.
+- O registro completo do banco só deve ser acessado pelo responsável técnico.
+
+Quem pode editar:
+
+- Somente o responsável pela plataforma.
+- O corretor solicita alterações por contato externo.
+
+
+5.4 Tabela EMPREENDIMENTO
+
+Objetivo:
+
+Armazenar cada projeto publicado dentro da conta do corretor.
+
+Campos:
+
+- id: UUID ou bigint, chave primária.
+- corretor_id: chave estrangeira para CORRETOR.
+- nome: varchar, obrigatório.
+- slug: varchar, obrigatório, único dentro do corretor.
+- descricao_curta: text, obrigatório.
+- descricao_completa: text, opcional.
+- cidade: varchar, opcional.
+- estado: varchar, opcional.
+- endereco: text, opcional.
+- latitude: decimal, opcional.
+- longitude: decimal, opcional.
+- imagem_capa_url: text, obrigatório.
+- logo_url: text, opcional.
+- modelo_3d_url: text, opcional.
+- modelo_3d_poster_url: text, opcional.
+- configuracao_visual_json: jsonb, obrigatório.
+- status_publicacao: varchar, obrigatório.
+- ordem_menu: integer, obrigatório.
+- criado_em: timestamp.
+- atualizado_em: timestamp.
+
+Valores de status_publicacao:
+
+- rascunho.
+- publicado.
+- pausado.
+
+Regras:
+
+- Só projetos publicados aparecem na tela inicial.
+- Só projetos publicados podem ser acessados por link público.
+- O slug será usado na URL.
+- O conteúdo será específico de cada empreendimento.
+
+Quem pode ver:
+
+- Projetos publicados: qualquer visitante com o link.
+- Projetos em rascunho: somente o responsável técnico.
+
+Quem pode editar:
+
+- Somente o responsável pela plataforma.
+
+
+5.5 Tabela MIDIA
+
+Objetivo:
+
+Armazenar imagens, renders, vídeos, panoramas e outros arquivos de um empreendimento.
+
+Campos:
+
+- id.
+- empreendimento_id.
+- tipo.
+- categoria.
+- titulo.
+- descricao.
+- arquivo_url.
+- miniatura_url.
+- mime_type.
+- tamanho_bytes.
+- ordem.
+- publico.
+- criado_em.
+- atualizado_em.
+
+Valores de tipo:
+
+- imagem.
+- render.
+- video.
+- panorama.
+- planta.
+- modelo_3d.
+
+Valores de categoria:
+
+- fachada.
+- sala.
+- cozinha.
+- quarto.
+- suite.
+- sacada.
+- piscina.
+- academia.
+- paisagismo.
+- implantacao.
+- outros.
+
+Regras:
+
+- Mídia com publico = true pode aparecer para o cliente.
+- Mídia com publico = false não deve ser enviada pela API pública.
+- A ordem define a apresentação na galeria.
+
+Quem pode ver:
+
+- Mídia pública: qualquer visitante.
+- Mídia não pública: somente o responsável técnico.
+
+Quem pode editar:
+
+- Somente o responsável pela plataforma.
+
+
+5.6 Tabela AMENITY
+
+Campos:
+
+- id.
+- empreendimento_id.
+- nome.
+- descricao.
+- imagem_url.
+- panorama_url.
+- coordenada_3d_json, opcional.
+- ordem.
+- ativo.
+- criado_em.
+- atualizado_em.
+
+Regras:
+
+- Amenities inativas não aparecem no menu.
+- Se não houver nenhuma amenity ativa, o item “Amenities” não aparece.
+
+Quem pode ver:
+
+- Amenities ativas: qualquer visitante.
+
+Quem pode editar:
+
+- Somente o responsável pela plataforma.
+
+
+5.7 Tabela PLANTA
+
+Campos:
+
+- id.
+- empreendimento_id.
+- nome.
+- tipologia.
+- quartos.
+- suites.
+- area_privativa.
+- area_total.
+- vagas.
+- arquivo_url.
+- thumbnail_url.
+- pode_baixar.
+- ordem.
+- ativo.
+- criado_em.
+- atualizado_em.
+
+Regras:
+
+- Plantas inativas não aparecem.
+- O botão de download só aparece quando pode_baixar = true.
+- O cliente pode ampliar a planta sem necessariamente baixá-la.
+
+Quem pode ver:
+
+- Plantas ativas e públicas: qualquer visitante.
+
+Quem pode editar:
+
+- Somente o responsável pela plataforma.
+
+
+5.8 Tabela PONTO_INTERESSE
+
+Campos:
+
+- id.
+- empreendimento_id.
+- nome.
+- categoria.
+- descricao.
+- latitude.
+- longitude.
+- distancia_texto.
+- tempo_texto.
+- ordem.
+- ativo.
+
+Quem pode ver:
+
+- Pontos ativos: qualquer visitante.
+
+Quem pode editar:
+
+- Somente o responsável pela plataforma.
+
+
+5.9 Tabela LINK_COMPARTILHADO
+
+Objetivo:
+
+Registrar o link copiado pelo corretor e permitir rastrear a origem dos contatos.
+
+Campos:
+
+- id.
+- corretor_id.
+- empreendimento_id.
+- codigo_publico.
+- tipo.
+- url_destino.
+- ativo.
+- acessos.
+- ultimo_acesso.
+- criado_em.
+
+Valores de tipo:
+
+- geral.
+- secao.
+- unidade_configurada.
+
+Regra de link geral:
+
+    /p/{empreendimentoSlug}?corretor={corretorSlug}
+
+Regra de link de seção:
+
+    /p/{empreendimentoSlug}?secao={secao}&corretor={corretorSlug}
+
+Quem pode ver:
+
+- O link público pode ser aberto por qualquer visitante.
+
+Quem pode editar:
+
+- O responsável pela plataforma pode desativar o link.
+- O corretor não edita o registro.
+
+
+5.10 Tabela LEAD
+
+Campos:
+
+- id.
+- corretor_id.
+- empreendimento_id.
+- link_id.
+- nome.
+- telefone.
+- email.
+- mensagem.
+- interesse.
+- consentimento.
+- origem.
+- criado_em.
+
+Regras:
+
+- nome é obrigatório.
+- telefone é obrigatório.
+- consentimento é obrigatório.
+- o lead deve ser ligado ao corretor informado no link.
+- o lead deve ser ligado ao empreendimento aberto.
+
+Quem pode ver:
+
+- O responsável técnico.
+- O corretor responsável pelo lead, por meio do canal definido, como e-mail ou WhatsApp.
+
+Quem pode editar:
+
+- Na primeira versão, o lead será somente criado pelo formulário.
+- Não haverá tela de edição de leads para o corretor.
+
+
+5.11 Tabela EVENTO_ACESSO
+
+Campos:
+
+- id.
+- corretor_id, opcional.
+- empreendimento_id.
+- link_id, opcional.
+- sessao_id.
+- tipo_evento.
+- secao.
+- dispositivo.
+- criado_em.
+
+Tipos de evento:
+
+- acesso_pagina.
+- abertura_3d.
+- interacao_3d.
+- abertura_galeria.
+- abertura_planta.
+- abertura_mapa.
+- abertura_amenity.
+- abertura_tour.
+- clique_whatsapp.
+- abertura_formulario.
+- envio_lead.
+- copia_link.
+
+Quem pode ver:
+
+- Somente o responsável técnico.
+- O cliente não vê os eventos.
+
+Quem pode editar:
+
+- Ninguém pela interface.
+- Eventos são inseridos automaticamente pela aplicação.
+
+
+5.12 Ligações entre tabelas
+
+CORRETOR 1:N EMPREENDIMENTO
+
+Um corretor possui vários empreendimentos publicados.
+
+EMPREENDIMENTO 1:N MIDIA
+
+Um empreendimento possui vários arquivos.
+
+EMPREENDIMENTO 1:N AMENITY
+
+Um empreendimento possui várias amenities.
+
+EMPREENDIMENTO 1:N PLANTA
+
+Um empreendimento possui várias plantas.
+
+EMPREENDIMENTO 1:N PONTO_INTERESSE
+
+Um empreendimento possui vários pontos de interesse.
+
+CORRETOR 1:N LINK_COMPARTILHADO
+
+Um corretor possui vários links gerados.
+
+EMPREENDIMENTO 1:N LINK_COMPARTILHADO
+
+Um empreendimento possui vários links gerados.
+
+LINK_COMPARTILHADO 1:N LEAD
+
+Um link pode originar vários leads.
+
+CORRETOR 1:N LEAD
+
+Um corretor pode receber vários leads.
+
+EMPREENDIMENTO 1:N LEAD
+
+Um empreendimento pode gerar vários leads.
+
+
+====================================================================
+6. PLANO DE IMPLEMENTAÇÃO E TESTES
+====================================================================
+
+Regra de execução:
+
+Cada etapa só poderá ser considerada concluída depois que o teste indicado for aprovado. Não avançar para a etapa seguinte com falhas estruturais na etapa atual.
+
+
+ETAPA 01 — Preparar projeto e repositório
+
+Objetivo:
+
+Criar a base do projeto web.
+
+Tarefas:
+
+- Criar projeto Next.js.
+- Ativar TypeScript.
+- Configurar lint.
+- Configurar formatação.
+- Criar estrutura de pastas.
+- Configurar variáveis de ambiente.
+- Criar página inicial temporária.
+
+Teste antes de avançar:
+
+- O projeto inicia localmente.
+- A página abre no navegador.
+- TypeScript não apresenta erro.
+- Lint executa sem erro crítico.
+- Build de produção conclui.
+
+
+ETAPA 02 — Criar modelo visual base
+
+Objetivo:
+
+Criar o layout global sem conteúdo real.
+
+Tarefas:
+
+- Definir cores.
+- Instalar fonte.
+- Criar Header.
+- Criar botão primário.
+- Criar botão secundário.
+- Criar card.
+- Criar modal.
+- Criar sistema de espaçamento.
+- Criar breakpoints responsivos.
+
+Teste antes de avançar:
+
+- O layout abre em desktop.
+- O layout abre em celular.
+- Cores conferem com o briefing.
+- Botões possuem estados normal, hover e pressionado.
+- Texto não estoura os componentes.
+- Modal abre e fecha.
+
+
+ETAPA 03 — Criar banco de dados
+
+Objetivo:
+
+Criar as tabelas necessárias para a primeira versão.
+
+Tarefas:
+
+- Criar tabela corretor.
+- Criar tabela empreendimento.
+- Criar tabela mídia.
+- Criar tabela amenity.
+- Criar tabela planta.
+- Criar tabela ponto_interesse.
+- Criar tabela link_compartilhado.
+- Criar tabela lead.
+- Criar tabela evento_acesso.
+- Criar chaves estrangeiras.
+- Criar índices para slugs.
+- Criar valores de status.
+
+Teste antes de avançar:
+
+- Todas as tabelas são criadas.
+- As chaves estrangeiras funcionam.
+- Não é possível criar slug duplicado no mesmo contexto.
+- Uma mídia não pode ser criada sem empreendimento válido.
+- Um lead não pode ser criado sem empreendimento e corretor.
+- Consulta de um corretor retorna seus projetos.
+
+
+ETAPA 04 — Criar dados de teste
+
+Objetivo:
+
+Popular o banco com um corretor e três empreendimentos fictícios.
+
+Tarefas:
+
+- Criar corretor “João”.
+- Criar projeto “Residencial Aurora”.
+- Criar projeto “Parque das Acácias”.
+- Criar projeto “Torre Central”.
+- Inserir capas.
+- Inserir descrições.
+- Inserir imagens de teste.
+- Inserir plantas de teste.
+- Inserir amenities de teste.
+- Inserir localização de teste.
+
+Teste antes de avançar:
+
+- A consulta retorna João.
+- A consulta retorna três projetos publicados.
+- Cada projeto retorna somente seus próprios dados.
+- As imagens do Aurora não aparecem no Acácias.
+- As plantas estão ligadas ao projeto correto.
+
+
+ETAPA 05 — Criar API de leitura do corretor
+
+Objetivo:
+
+Permitir que a tela inicial carregue os dados pelo slug do corretor.
+
+Tarefas:
+
+- Criar endpoint GET do corretor.
+- Validar slug.
+- Retornar dados públicos do corretor.
+- Retornar empreendimentos publicados.
+- Ordenar por ordem_menu.
+- Não retornar campos internos desnecessários.
+
+Teste antes de avançar:
+
+- GET /corretor/joao retorna 200.
+- Slug inexistente retorna 404.
+- Projeto pausado não aparece.
+- Projeto em rascunho não aparece.
+- A resposta não contém dados de pagamento ou comissão.
+
+
+ETAPA 06 — Construir a tela inicial
+
+Objetivo:
+
+Exibir os três empreendimentos para o corretor.
+
+Tarefas:
+
+- Criar rota /corretor/[corretorSlug].
+- Criar cabeçalho.
+- Criar identificação do corretor.
+- Criar cards.
+- Criar botão “Ver empreendimento”.
+- Criar botão “Copiar link”.
+- Criar botão WhatsApp.
+
+Teste antes de avançar:
+
+- A URL do João abre a tela correta.
+- Os três cards aparecem.
+- Cada card possui imagem correta.
+- Cada botão abre a ação correta.
+- O layout funciona em celular.
+- O link copiado corresponde ao projeto certo.
+
+
+ETAPA 07 — Criar API de leitura do empreendimento
+
+Objetivo:
+
+Retornar todos os dados públicos de um projeto.
+
+Tarefas:
+
+- Criar endpoint do empreendimento.
+- Buscar pelo slug do projeto.
+- Validar associação com o corretor.
+- Retornar módulos.
+- Retornar mídias públicas.
+- Retornar plantas ativas.
+- Retornar amenities ativas.
+- Retornar pontos ativos.
+- Retornar configuração visual.
+
+Teste antes de avançar:
+
+- O projeto certo é retornado.
+- Projeto inexistente retorna 404.
+- Projeto pausado não fica público.
+- Mídia não pública não é retornada.
+- Amenity inativa não é retornada.
+- Planta inativa não é retornada.
+- Conteúdos de projetos diferentes não se misturam.
+
+
+ETAPA 08 — Construir a tela do empreendimento
+
+Objetivo:
+
+Criar a página interativa carregada pelo slug.
+
+Tarefas:
+
+- Criar cabeçalho.
+- Criar botão de voltar.
+- Criar nome do projeto.
+- Criar menu interno.
+- Criar área principal.
+- Criar botão de compartilhar.
+- Criar botão de copiar link.
+
+Teste antes de avançar:
+
+- Aurora abre com os dados do Aurora.
+- O botão voltar retorna à tela do corretor.
+- O menu mostra apenas módulos existentes.
+- O nome do projeto está correto.
+- A URL permanece correta ao navegar.
+
+
+ETAPA 09 — Integrar visualizador 3D
+
+Objetivo:
+
+Exibir o modelo 3D do projeto quando houver asset.
+
+Tarefas:
+
+- Instalar Three.js e React Three Fiber.
+- Criar componente de visualização.
+- Carregar GLB/GLTF.
+- Configurar câmera.
+- Configurar luzes.
+- Criar arraste para girar.
+- Criar zoom.
+- Criar botão recenter.
+- Criar vistas configuradas.
+- Criar tela cheia.
+- Criar fallback visual.
+
+Teste antes de avançar:
+
+- O modelo carrega.
+- O modelo não aparece deformado.
+- Arraste gira corretamente.
+- Zoom funciona com mouse.
+- Zoom funciona com toque.
+- Recentrar funciona.
+- Tela cheia funciona.
+- Falha de carregamento mostra fallback.
+- O celular não trava durante o carregamento básico.
+
+
+ETAPA 10 — Criar galeria
+
+Objetivo:
+
+Permitir visualizar renders e imagens.
+
+Tarefas:
+
+- Criar lista de miniaturas.
+- Criar imagem ampliada.
+- Criar anterior.
+- Criar próxima.
+- Criar fechar.
+- Criar categorias.
+- Criar legendas.
+
+Teste antes de avançar:
+
+- A galeria mostra somente imagens do projeto.
+- Miniatura abre a imagem certa.
+- Próxima e anterior funcionam.
+- Fechar retorna ao estado anterior.
+- A galeria funciona em celular.
+
+
+ETAPA 11 — Criar localização e mapa
+
+Objetivo:
+
+Mostrar localização do empreendimento.
+
+Tarefas:
+
+- Integrar provedor de mapas.
+- Criar marcador.
+- Exibir endereço.
+- Criar pontos de interesse configurados.
+- Criar botão mapa externo.
+
+Teste antes de avançar:
+
+- O marcador aparece no local correto.
+- O endereço aparece corretamente.
+- Pontos do projeto certo são mostrados.
+- O mapa externo abre o endereço correto.
+- O mapa não impede o carregamento da página.
+
+
+ETAPA 12 — Criar plantas
+
+Objetivo:
+
+Exibir plantas públicas do empreendimento.
+
+Tarefas:
+
+- Criar listagem.
+- Criar filtro por tipologia.
+- Criar visualizador ampliado.
+- Criar zoom.
+- Criar download condicional.
+- Criar fechar.
+
+Teste antes de avançar:
+
+- Plantas do projeto correto aparecem.
+- Filtro funciona.
+- Planta abre ampliada.
+- Download só aparece quando permitido.
+- Planta não aparece se estiver inativa.
+
+
+ETAPA 13 — Criar amenities
+
+Objetivo:
+
+Exibir áreas comuns e seus conteúdos.
+
+Tarefas:
+
+- Criar lista.
+- Criar cards de amenity.
+- Criar imagem e descrição.
+- Criar panorama opcional.
+- Criar botão “Ver no modelo”, quando houver coordenada.
+- Criar retorno à lista.
+
+Teste antes de avançar:
+
+- Amenities corretas aparecem.
+- Item inativo não aparece.
+- A imagem corresponde ao item.
+- O retorno funciona.
+- O botão “Ver no modelo” só aparece quando configurado.
+
+
+ETAPA 14 — Criar tour/panorama
+
+Objetivo:
+
+Abrir tours configurados para o projeto.
+
+Tarefas:
+
+- Criar visualizador de panorama.
+- Criar seleção de ambiente.
+- Criar próximo.
+- Criar anterior.
+- Criar fechar.
+
+Teste antes de avançar:
+
+- O tour carrega.
+- Cada ambiente abre o panorama correto.
+- Próximo e anterior funcionam.
+- Fechar retorna à página.
+- Se não houver tour, o menu não aparece.
+
+
+ETAPA 15 — Criar compartilhamento
+
+Objetivo:
+
+Permitir ao corretor copiar e enviar o link público.
+
+Tarefas:
+
+- Criar modal.
+- Montar URL pública.
+- Incluir slug do corretor.
+- Criar copiar link.
+- Criar WhatsApp.
+- Registrar evento de compartilhamento.
+
+Teste antes de avançar:
+
+- A URL aponta para o projeto correto.
+- A URL identifica o corretor correto.
+- Copiar link funciona.
+- WhatsApp abre com mensagem correta.
+- O link abre em navegador anônimo.
+
+
+ETAPA 16 — Criar página pública do cliente
+
+Objetivo:
+
+Permitir que o cliente veja somente o projeto recebido.
+
+Tarefas:
+
+- Criar rota /p/[empreendimentoSlug].
+- Ler corretor pela query string.
+- Retornar conteúdo público.
+- Ocultar botão de voltar ao catálogo.
+- Ocultar lista de outros projetos.
+- Exibir contato do corretor.
+- Manter módulos visuais.
+
+Teste antes de avançar:
+
+- Link público abre sem login.
+- Cliente não vê tela inicial.
+- Cliente não vê outros projetos.
+- Cliente não vê botões administrativos.
+- Cliente vê o nome correto do corretor.
+- Cliente consegue navegar pelos módulos.
+- Seta do navegador retorna ao local anterior, sem bloqueio.
+
+
+ETAPA 17 — Criar contato via WhatsApp
+
+Objetivo:
+
+Permitir contato direto com o corretor.
+
+Tarefas:
+
+- Criar botão no cabeçalho público.
+- Criar botão na área de conversão.
+- Criar mensagem automática.
+- Inserir nome do projeto na mensagem.
+
+Teste antes de avançar:
+
+- O botão abre o número correto.
+- A mensagem contém o projeto correto.
+- O botão funciona no celular.
+- O botão funciona no desktop com WhatsApp Web.
+
+
+ETAPA 18 — Criar formulário de lead
+
+Objetivo:
+
+Capturar interesse do cliente.
+
+Tarefas:
+
+- Criar modal.
+- Criar nome.
+- Criar telefone.
+- Criar e-mail opcional.
+- Criar mensagem opcional.
+- Criar consentimento.
+- Criar validações.
+- Criar endpoint POST.
+- Salvar no banco.
+- Enviar notificação, se configurado.
+
+Teste antes de avançar:
+
+- Formulário abre.
+- Campos obrigatórios são validados.
+- Lead válido é salvo.
+- Lead recebe corretor correto.
+- Lead recebe empreendimento correto.
+- Consentimento é registrado.
+- Mensagem de sucesso aparece.
+- Falha de API mantém os dados preenchidos.
+
+
+ETAPA 19 — Criar eventos de acesso
+
+Objetivo:
+
+Registrar interações básicas da primeira versão.
+
+Tarefas:
+
+- Registrar abertura de projeto.
+- Registrar abertura de galeria.
+- Registrar abertura de planta.
+- Registrar abertura de mapa.
+- Registrar clique de WhatsApp.
+- Registrar abertura de formulário.
+- Registrar envio de lead.
+- Registrar cópia de link.
+
+Teste antes de avançar:
+
+- Cada ação cria o evento correto.
+- O evento contém empreendimento correto.
+- A sessão é agrupada corretamente.
+- Eventos não impedem o funcionamento da interface.
+- Falha de analytics não quebra a aplicação.
+
+
+ETAPA 20 — Responsividade e acessibilidade
+
+Objetivo:
+
+Garantir uso consistente em diferentes dispositivos.
+
+Tarefas:
+
+- Ajustar desktop.
+- Ajustar tablet.
+- Ajustar celular.
+- Testar teclado.
+- Testar contraste.
+- Adicionar rótulos de ícones.
+- Adicionar textos alternativos.
+- Ajustar áreas de toque.
+
+Teste antes de avançar:
+
+- Testar Chrome desktop.
+- Testar Safari mobile.
+- Testar navegador Android.
+- Testar tela de 360 px.
+- Testar tela de 768 px.
+- Testar tela de 1440 px.
+- Testar zoom do navegador.
+- Testar leitura dos botões.
+
+
+ETAPA 21 — Publicação e domínio
+
+Objetivo:
+
+Colocar a aplicação no ar.
+
+Tarefas:
+
+- Criar projeto de hospedagem.
+- Configurar variáveis de ambiente.
+- Configurar banco de produção.
+- Configurar storage.
+- Configurar domínio.
+- Configurar SSL.
+- Configurar política de privacidade.
+- Publicar build.
+
+Teste antes de concluir:
+
+- Domínio abre com HTTPS.
+- Tela inicial abre.
+- Link público abre.
+- Modelo 3D carrega em produção.
+- Formulário funciona em produção.
+- Lead chega ao destino configurado.
+- Arquivos não exibem erro de permissão.
+- Não existem chaves secretas expostas no frontend.
+
+
+ETAPA 22 — Teste completo de aceitação
+
+Fluxo do corretor:
+
+1. Abrir URL do corretor.
+2. Ver três projetos.
+3. Abrir projeto 1.
+4. Usar 3D.
+5. Abrir galeria.
+6. Abrir localização.
+7. Abrir planta.
+8. Abrir amenity.
+9. Copiar link.
+10. Enviar pelo WhatsApp.
+
+Fluxo do cliente:
+
+1. Abrir link recebido.
+2. Confirmar que não aparece o catálogo.
+3. Explorar 3D.
+4. Abrir galeria.
+5. Abrir localização.
+6. Abrir plantas.
+7. Abrir amenities.
+8. Clicar em WhatsApp.
+9. Enviar formulário.
+10. Confirmar recebimento do lead.
+
+Critério final:
+
+O produto só estará pronto quando o fluxo inteiro funcionar do início ao fim em desktop e celular.
+
+
+====================================================================
+7. DEFINIÇÃO FINAL DA PRIMEIRA VERSÃO
+====================================================================
+
+A primeira versão será composta por:
+
+- Uma aplicação web.
+- Uma URL de acesso do corretor.
+- Uma tela inicial com os empreendimentos contratados.
+- Três empreendimentos inicialmente publicados.
+- Uma página interativa reutilizável para cada empreendimento.
+- Um link público por empreendimento.
+- Identificação do corretor no link.
+- Visualização 3D ou fallback.
+- Galeria.
+- Localização.
+- Plantas.
+- Amenities.
+- Tour quando houver conteúdo.
+- Compartilhamento por copiar link.
+- Compartilhamento via WhatsApp.
+- Botão de contato.
+- Formulário de lead.
+- Registro de leads.
+- Registro básico de eventos.
+- Banco de dados.
+- Storage para arquivos.
+- Hospedagem centralizada.
+- Layout responsivo.
+
+Não haverá login, pagamento, fluxo financeiro, disponibilidade de unidades, CRM, ERP, cadastro autônomo de projetos ou painel de edição para o corretor.
+
+O corretor utilizará o produto como uma ferramenta pronta de apresentação. Cada novo empreendimento será criado, modelado, configurado e publicado pelo responsável pela plataforma mediante solicitação e contratação.
+
+FIM DO DOCUMENTO

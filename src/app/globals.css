@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/* Identidade de marlonsoterocorretor.com.br: fundo claro, azul-marinho e dourado; Outfit + Inter. */
+@theme {
+  --color-paper: #f8fafc;          /* hsl(210 40% 98%) */
+  --color-surface: #ffffff;
+  --color-ink: #0f172a;            /* hsl(222 47% 11%) */
+  --color-navy: #12234a;           /* hsl(222 60% 18%) — primária */
+  --color-navy-hover: #1b3266;
+  --color-muted: #566376;          /* hsl(215 16% 40%) */
+  --color-line: #d9dfe8;           /* hsl(215 25% 88%) */
+  --color-mist: #edf1f6;           /* hsl(215 25% 94%) */
+  --color-gold: #cba648;           /* hsl(43 56% 54%) — só decorativo */
+  --color-gold-ink: #8a6b22;       /* dourado legível sobre claro (AA) */
+  --color-success: #1f7a4d;
+  --color-danger: #b42335;
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-outfit), system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 8rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 768px) {
+  body { font-size: 16px; }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-navy);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+dialog::backdrop { background: rgb(15 23 42 / 0.64); }
+dialog[open] { animation: rise 200ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Botões (escopo 4.5): 48px mobile / 44px desktop, raio 8px. */
+@utility btn {
+  @apply inline-flex h-12 items-center justify-center gap-2 rounded-lg px-5 text-[15px] font-semibold leading-tight whitespace-nowrap transition-[background-color,border-color,color,transform] duration-150 active:scale-[0.98] md:h-11 md:text-sm disabled:pointer-events-none disabled:opacity-60;
+}
+@utility btn-primary { @apply btn bg-navy text-white hover:bg-navy-hover; }
+@utility btn-secondary { @apply btn border border-navy text-navy hover:bg-navy hover:text-white; }
+@utility btn-ghost { @apply btn text-navy hover:bg-mist; }
+@utility icon-btn {
+  @apply inline-flex size-11 shrink-0 items-center justify-center rounded-lg text-navy transition-colors hover:bg-mist md:size-10;
+}
+@utility eyebrow { @apply text-xs font-semibold tracking-[0.18em] text-gold-ink uppercase; }
+@utility page-x { @apply px-4 md:px-8 xl:px-12; }
+@utility field {
+  @apply block h-12 w-full rounded-lg border border-line bg-surface px-3.5 text-[15px] text-ink placeholder:text-muted/80 focus:border-navy focus:ring-2 focus:ring-navy/15 focus:outline-none md:h-11;
+}
