@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { ArrowRight, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,7 +11,7 @@ function PropertyCard({ p, index, featured }: { p: PublicProperty; index: number
   const facts = propertyFacts(p);
   return (
     <article
-      className={`group overflow-hidden rounded-xl border border-line bg-surface transition-[border-color,transform,box-shadow] duration-200 hover:-translate-y-1 hover:border-gold hover:shadow-[0_12px_32px_-16px_rgb(18_35_74/0.25)] ${
+      className={`group overflow-hidden rounded-xl border border-line bg-surface ease-arch transition-[border-color,box-shadow] duration-700 hover:border-gold/60 hover:shadow-[0_24px_48px_-28px_rgb(18_35_74/0.35)] ${
         featured ? "md:grid md:grid-cols-12" : "flex flex-col"
       }`}
     >
@@ -26,7 +27,7 @@ function PropertyCard({ p, index, featured }: { p: PublicProperty; index: number
           fill
           priority={index === 0}
           sizes={featured ? "(min-width: 768px) 58vw, 100vw" : "(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"}
-          className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+          className="object-cover ease-arch transition-transform duration-[1600ms] group-hover:scale-[1.06] motion-reduce:transition-none"
         />
       </Link>
       <div className={`flex flex-1 flex-col p-5 ${featured ? "md:col-span-5 md:p-10" : "md:p-6"}`}>
@@ -43,6 +44,7 @@ function PropertyCard({ p, index, featured }: { p: PublicProperty; index: number
             {p.nome}
           </Link>
         </h3>
+        <span aria-hidden className="mt-3 block h-px w-10 origin-left bg-gold ease-arch transition-transform duration-700 group-hover:scale-x-[3] motion-reduce:transition-none" />
         <p className="mt-3 text-muted">{p.descricaoCurta}</p>
         {facts.length > 0 && (
           <dl className="mt-6 grid grid-cols-3 gap-3 border-t border-line pt-5">
@@ -56,7 +58,7 @@ function PropertyCard({ p, index, featured }: { p: PublicProperty; index: number
         )}
         <div className="mt-auto flex flex-col gap-2 pt-8 sm:flex-row">
           <Link href={`/imovel/${p.slug}`} className="btn-primary sm:flex-1">
-            Ver empreendimento <ArrowRight className="size-4" aria-hidden />
+            Ver empreendimento <ArrowRight className="size-4 ease-arch transition-transform duration-500 group-hover:translate-x-1 motion-reduce:transition-none" aria-hidden />
           </Link>
           <CopyLinkButton slug={p.slug} className="btn-secondary sm:flex-1" />
         </div>
@@ -89,7 +91,10 @@ export default async function Home() {
             <p className="eyebrow intro-fade" style={{ "--i": 1 } as React.CSSProperties}>Apresentações de empreendimentos</p>
             <h1 className="mt-4 max-w-[14ch] font-display text-[34px] leading-[1.08] font-semibold tracking-[-0.02em] text-navy md:text-[56px]">
               {["Empreendimentos", "que acompanho", "de perto."].map((line, i) => (
-                <span key={line} className="intro-line"><span style={{ "--i": i + 2 } as React.CSSProperties}>{line}</span></span>
+                <Fragment key={line}>
+                  {i > 0 && " "}
+                  <span className="intro-line"><span style={{ "--i": i + 2 } as React.CSSProperties}>{line}</span></span>
+                </Fragment>
               ))}
             </h1>
             <p style={{ "--i": 5 } as React.CSSProperties} className="intro-fade mt-5 max-w-lg text-[17px] text-muted md:text-lg">
