@@ -41,6 +41,8 @@ npm run screenshots # com o servidor rodando: capturas 360/768/1440 em screensho
    - `galeria`: cada mídia tem `categoria` (fachada, sala, cozinha, quarto, suite, sacada, piscina, academia, paisagismo, implantacao, outros) e `publico`. Mídias com `publico: false` nunca chegam à página.
    - `plantas`: `ativo` controla se aparece e `podeBaixar` controla o botão de download.
    - `amenities` e `pontos` (pontos de interesse) também têm `ativo`.
+   - `narrativa` (opcional): cenas do percurso em tela cheia na abertura da página. Cenas seguidas com a mesma `imagem` dividem a foto; se uma tiver `camera: { ox, oy, px, py }`, a foto vira uma câmera que se aproxima do ponto `ox`/`oy` (percentuais da própria imagem, ex.: a porta) enquanto elas rolam. `px`/`py` definem o enquadramento em telas mais largas que a foto. Use fotos de 2400 px de largura (JPEG ~q82) e desfoque placas de veículos antes de publicar.
+   - `capa.pos` (opcional): `object-position` da capa nos cards da página inicial (ex.: `"50% 37%"`).
    - `tour` (opcional): lista de ambientes. Se ficar vazia, o item "Tour" não aparece no menu.
    - `exemplo: true` mostra o aviso "Apresentação modelo"; remova esse campo nos imóveis reais.
 3. Defina `status: "publicado"` e `ordem` (posição na página inicial).

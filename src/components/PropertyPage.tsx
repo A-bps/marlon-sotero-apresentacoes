@@ -1,8 +1,8 @@
-import { ArrowLeft, ArrowUpRight, Images, MapPin, MessageCircle, Share2 } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowUpRight, Images, MapPin, MessageCircle, Share2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { broker, type PublicProperty } from "@/data/properties";
+import { broker, type Beat, type PublicProperty } from "@/data/properties";
 import { contactMessage, Footer, Logo, propertyFacts, waLink } from "./brand";
 import { LeadDialog, SectionNav, ShareDialog } from "./interactive";
 import { Amenities, Gallery, Plans } from "./modules";
@@ -11,20 +11,23 @@ import { Story } from "./Story";
 type Mode = "broker" | "client";
 
 /**
- * Área visual principal. Hoje mostra a capa; quando houver `model` (GLB),
- * o visualizador 3D entra no slot marcado abaixo, mantendo a capa como fallback/poster.
+ * Área visual principal. Com `beats`, é o hero em tela cheia com percurso (Story: câmera até a porta
+ * e depois para dentro); sem eles, mostra só a capa em tela cheia. O visualizador 3D (`model`) entra
+ * no lugar da imagem, mantendo a capa como fallback/poster.
  */
-export function PropertyStage({ cover, model, nome }: { cover: { src: string; alt: string }; model?: string; nome: string }) {
+export function PropertyStage({
+  cover, model, nome, beats, intro,
+}: { cover: { src: string; alt: string; pos?: string }; model?: string; nome: string; beats?: Beat[]; intro: ReactNode }) {
+  if (beats) return <Story beats={beats} intro={intro} model={model} />;
   return (
-    <div className="relative h-[420px] overflow-hidden bg-mist md:h-[min(72svh,720px)] md:min-h-[600px]" data-model={model ? "pending" : undefined}>
+    <div className="relative h-[calc(100svh-64px)] min-h-[420px] overflow-hidden bg-mist md:h-[calc(100svh-72px)]" data-model={model ? "pending" : undefined}>
       {/* Slot do visualizador 3D: renderizar <Viewer3D src={model} poster={cover.src} /> aqui. */}
-      <Image src={cover.src} alt={cover.alt} fill priority sizes="100vw" className="stage-media object-cover" />
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/45 to-transparent" aria-hidden />
-      <div className="page-x absolute inset-x-0 bottom-0 mx-auto flex max-w-[1320px] items-end justify-between gap-4 pb-5 md:pb-8">
-        <p className="sr-only">Imagem principal de {nome}</p>
-        <span className="hidden text-xs font-medium tracking-[0.18em] text-white/90 uppercase sm:block">Imagem ilustrativa</span>
-        <a href="#galeria" className="btn ml-auto bg-white text-navy shadow-sm hover:bg-paper">
-          <Images className="size-4" aria-hidden /> Ver galeria
+      <Image src={cover.src} alt={cover.alt} fill priority sizes="100vw" style={{ objectPosition: cover.pos }} className="stage-media object-cover" />
+      <div className="absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-[#0a1230]/80 via-[#0a1230]/30 to-transparent" aria-hidden />
+      <div className="page-x absolute inset-x-0 bottom-0 mx-auto flex max-w-[1320px] items-end justify-between gap-4 pb-6 md:pb-10">
+        <div className="min-w-0">{intro}</div>
+        <a href="#galeria" className="btn shrink-0 bg-white text-navy shadow-sm hover:bg-paper">
+          <Images className="size-4" aria-hidden /> <span className="sr-only md:not-sr-only">Ver galeria</span><span className="sr-only">{nome}</span>
         </a>
       </div>
     </div>
@@ -63,6 +66,20 @@ export function PropertyPage({ property: p, mode }: { property: PublicProperty; 
     { id: "tour", label: "Tour", show: Boolean(p.tour) },
   ].filter((m) => m.show);
   const n = (id: string) => modules.findIndex((m) => m.id === id) + 1;
+  const introBody = (
+    <>
+      <p className="flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.16em] text-white uppercase [text-shadow:0_1px_14px_rgb(10_18_48/0.55)] md:text-xs md:tracking-[0.18em]">
+        <MapPin className="size-3.5 shrink-0" aria-hidden /> <span><span className="hidden sm:inline">{p.bairro} · </span>{p.cidade}/{p.uf}</span>
+      </p>
+      <h1 className="mt-2 max-w-[14ch] font-display text-[34px] leading-[1.04] font-semibold tracking-[-0.02em] text-white [text-shadow:0_2px_24px_rgb(10_18_48/0.5)] md:mt-3 md:text-[56px] lg:text-[72px]">{p.nome}</h1>
+      <p className="mt-4 hidden max-w-xl text-[17px] text-white [text-shadow:0_1px_14px_rgb(10_18_48/0.55)] md:block md:text-lg">{p.descricaoCurta}</p>
+      {p.narrativa && (
+        <p className="mt-5 flex items-center gap-2 text-xs tracking-[0.18em] text-white uppercase [text-shadow:0_1px_14px_rgb(10_18_48/0.55)] md:mt-8">
+          Role para entrar <ArrowDown className="size-3.5" aria-hidden />
+        </p>
+      )}
+    </>
+  );
   const bbox = [p.lng - 0.012, p.lat - 0.007, p.lng + 0.012, p.lat + 0.007].join(",");
 
   return (
@@ -111,43 +128,34 @@ export function PropertyPage({ property: p, mode }: { property: PublicProperty; 
           </p>
         )}
         <div aria-hidden className="scroll-progress fixed inset-x-0 top-0 z-50 h-0.5 bg-gold" />
-        <PropertyStage cover={p.capa} model={p.modelo3d} nome={p.nome} />
+        <PropertyStage cover={p.capa} model={p.modelo3d} nome={p.nome} beats={p.narrativa} intro={p.narrativa ? <div className="page-x mx-auto w-full max-w-[1320px]">{introBody}</div> : introBody} />
 
-        <div className="page-x mx-auto grid max-w-[1320px] gap-8 py-10 md:py-14 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <p className="eyebrow flex items-center gap-1.5">
-              <MapPin className="size-3.5" aria-hidden /> {p.bairro} · {p.cidade}/{p.uf}
-            </p>
-            <h1 className="mt-3 font-display text-[28px] leading-[1.1] font-semibold tracking-[-0.015em] text-navy md:text-[44px]">
-              {p.nome}
-            </h1>
-            <p className="mt-4 max-w-xl text-[17px] text-muted md:text-lg">{p.descricaoCurta}</p>
-          </div>
-          <div className="md:max-w-xl lg:col-span-5 lg:max-w-none lg:pt-2">
-            {facts.length > 0 && <dl className="grid grid-cols-3 border-t border-l border-line bg-surface">
+        <div className="page-x mx-auto grid max-w-[1320px] gap-6 py-10 md:py-14 lg:grid-cols-12 lg:items-end lg:gap-8">
+          {facts.length > 0 && (
+            <dl className="grid grid-cols-3 border-t border-l border-line bg-surface md:max-w-2xl lg:col-span-7">
               {facts.map((f) => (
                 <div key={f.label} className="border-r border-b border-line px-3 py-4 md:px-5">
                   <dt className="text-xs text-muted">{f.label}</dt>
                   <dd className="mt-1 font-display text-base font-semibold whitespace-nowrap text-navy md:text-xl">{f.value}</dd>
                 </div>
               ))}
-            </dl>}
+            </dl>
+          )}
+          <div className="md:max-w-xl lg:col-span-5 lg:max-w-none">
             {mode === "client" ? (
-              <div className="mt-4 hidden gap-2 md:flex">
+              <div className="hidden gap-2 md:flex">
                 <button type="button" data-open="lead" className="btn-primary flex-1">Quero saber mais</button>
                 <a href={wa} target="_blank" rel="noopener noreferrer" className="btn-secondary flex-1">
                   <MessageCircle className="size-4" aria-hidden /> Falar com Marlon
                 </a>
               </div>
             ) : (
-              <button type="button" data-open="share" className="btn-secondary mt-4 w-full">
+              <button type="button" data-open="share" className="btn-secondary w-full">
                 <Share2 className="size-4" aria-hidden /> Compartilhar com cliente
               </button>
             )}
           </div>
         </div>
-
-        {p.narrativa && <Story beats={p.narrativa} />}
 
         <SectionNav items={modules.map(({ id, label }) => ({ id, label }))} />
 

@@ -38,8 +38,19 @@ export type PointOfInterest = { nome: string; categoria: string; distancia: stri
 
 export type TourScene = { nome: string; imagem: string };
 
-/** Cena do percurso (scrollytelling): uma imagem e uma frase curta. */
-export type Beat = { titulo: string; texto: string; imagem: string; alt: string };
+/**
+ * Cena do percurso (scrollytelling): uma imagem e uma frase curta.
+ * Cenas seguidas com a mesma imagem compartilham a foto. Se uma delas tiver `camera`, a foto é uma
+ * "câmera" que se aproxima de um ponto enquanto essas cenas rolam (percentuais da própria imagem):
+ * ox/oy = ponto de destino (ex.: a porta); px/py = enquadramento em telas mais largas que a foto.
+ */
+export type Beat = {
+  titulo: string;
+  texto: string;
+  imagem: string;
+  alt: string;
+  camera?: { ox: number; oy: number; px: number; py: number };
+};
 
 export type Property = {
   slug: string;
@@ -56,7 +67,7 @@ export type Property = {
   endereco: string;
   lat: number;
   lng: number;
-  capa: { src: string; alt: string };
+  capa: { src: string; alt: string; pos?: string };
   /** URL do GLB/GLTF. Reservado para o visualizador 3D (ainda não implementado). */
   modelo3d?: string;
   galeria: Media[];
@@ -86,6 +97,7 @@ export const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 export const allSlugs = () => properties.filter((p) => p.status !== "rascunho").map((p) => p.slug);
 
 const img = (f: string) => `${BASE}/imoveis/exemplo/${f}`;
+const FACHADA_ALT = "Fachada contemporânea ao entardecer, com laje em balanço, pedra clara, entrada coberta e fitas de luz quente";
 
 const properties: Property[] = [
   {
@@ -106,8 +118,9 @@ const properties: Property[] = [
     endereco: "Endereço ilustrativo, São José do Rio Preto/SP",
     lat: -20.8197,
     lng: -49.3794,
-    capa: { src: img("fachada2.jpg"), alt: "Residência contemporânea iluminada ao entardecer, com jardim e grandes panos de vidro" },
+    capa: { src: img("fachada-casa.jpg"), alt: FACHADA_ALT, pos: "50% 37%" },
     galeria: [
+      { src: img("fachada-casa.jpg"), alt: FACHADA_ALT, titulo: "Fachada ao entardecer", categoria: "fachada", tipo: "imagem", publico: true },
       { src: img("fachada.jpg"), alt: "Fachada contemporânea branca com piscina em primeiro plano", titulo: "Fachada", categoria: "fachada", tipo: "imagem", publico: true },
       { src: img("fachada2.jpg"), alt: "Residência iluminada ao entardecer com jardim frontal", titulo: "Acesso principal", categoria: "fachada", tipo: "imagem", publico: true },
       { src: img("sala.jpg"), alt: "Sala de estar integrada com sofá claro e grandes aberturas", titulo: "Living integrado", categoria: "sala", tipo: "imagem", publico: true },
@@ -133,7 +146,8 @@ const properties: Property[] = [
       { id: "spa", nome: "Spa (em definição)", descricao: "Item ainda não confirmado.", imagem: img("sala2.jpg"), alt: "", ativo: false },
     ],
     narrativa: [
-      { titulo: "A chegada", texto: "Volumes brancos, panos de vidro e a piscina como primeiro plano. A fachada se apresenta antes da porta.", imagem: img("fachada.jpg"), alt: "Fachada contemporânea branca com piscina em primeiro plano" },
+      { titulo: "A chegada", texto: "Laje em balanço, pedra clara e fitas de luz quente desenham a fachada. A entrada coberta já se vê da rua.", imagem: img("fachada-casa.jpg"), alt: FACHADA_ALT, camera: { ox: 54, oy: 58, px: 50, py: 40 } },
+      { titulo: "Entrar", texto: "Sob a laje, a luz conduz até a porta. Do lado de dentro, a casa se abre.", imagem: img("fachada-casa.jpg"), alt: FACHADA_ALT },
       { titulo: "Viver por dentro", texto: "Estar, jantar e cozinha em um só ambiente, abertos para a luz do dia e para a varanda.", imagem: img("sala.jpg"), alt: "Sala de estar integrada com sofá claro e grandes aberturas" },
       { titulo: "O lazer em casa", texto: "Piscina com deck, academia e jardim: o fim de semana começa no térreo.", imagem: img("piscina.jpg"), alt: "Piscina externa cercada por deck e vegetação" },
       { titulo: "O entorno", texto: "Mercado a seis minutos a pé, escola e hospital a poucos minutos de carro.", imagem: img("paisagismo.jpg"), alt: "Caminho arborizado em área verde" },

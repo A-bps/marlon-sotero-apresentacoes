@@ -4,7 +4,9 @@ import { Unavailable } from "@/components/brand";
 import { PropertyPage } from "@/components/PropertyPage";
 import { allSlugs, getProperty } from "@/data/properties";
 
-export const generateStaticParams = () => (process.env.PAGES ? allSlugs().map((slug) => ({ slug })) : []);
+// Só existe na prévia estática (PAGES=1). No build normal a rota precisa ser dinâmica (nonce da CSP),
+// e um generateStaticParams, mesmo vazio, a torna estática e causa DYNAMIC_SERVER_USAGE.
+export const generateStaticParams = process.env.PAGES ? () => allSlugs().map((slug) => ({ slug })) : undefined;
 
 type Props = { params: Promise<{ slug: string }> };
 

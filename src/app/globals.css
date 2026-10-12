@@ -86,6 +86,22 @@ dialog[open] { animation: rise 200ms cubic-bezier(0.2, 0.8, 0.2, 1); }
 .intro-line > span { display: block; }
 .scroll-progress { display: none; }
 
+/* Câmera do percurso: a foto quadrada é dimensionada à mão (sem object-fit), então a origem do zoom
+   fica em coordenadas da imagem em qualquer proporção de tela. cqw/cqh = tamanho do palco. */
+.cam {
+  --s: 2.4;
+  --side: max(100cqw, 100cqh);
+  --left: calc((100cqw - var(--side)) * var(--px));
+  --top: calc((100cqh - var(--side)) * var(--py));
+  --tx: calc(50cqw - var(--left) - var(--ox) * var(--side));
+  --ty: calc(54cqh - var(--top) - var(--oy) * var(--side));
+}
+@container (max-aspect-ratio: 1/1) { .cam { --s: 3.1; } }
+.cam-img {
+  position: absolute; left: var(--left); top: var(--top); width: var(--side); height: var(--side);
+  max-width: none; transform-origin: calc(var(--ox) * 100%) calc(var(--oy) * 100%); will-change: transform;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   /* Entrada do hub: primeira visita da sessão. Nada fica invisível sem CSS; a imagem LCP nunca começa oculta. */
   html[data-intro] .intro-fade { animation: intro-fade var(--dur-2) var(--ease-arch) both; animation-delay: calc(var(--i, 0) * var(--stagger)); }
@@ -93,6 +109,21 @@ dialog[open] { animation: rise 200ms cubic-bezier(0.2, 0.8, 0.2, 1); }
   html[data-intro] .intro-clip { animation: intro-clip 1100ms var(--ease-arch) both 120ms; }
   html[data-intro] .intro-clip img { animation: intro-scale 1300ms var(--ease-arch) both 120ms; }
   html[data-intro] .intro-rise { animation: intro-rise var(--dur-3) var(--ease-arch) both 520ms; }
+
+  /* Zoom em direção à porta, guiado pelo scroll das cenas da zona de aproximação (.zoom-zone). */
+  @supports ((animation-timeline: view()) and (timeline-scope: --a)) {
+    .story { timeline-scope: --zoom; }
+    .zoom-zone { view-timeline: --zoom block; }
+    .cam-img {
+      animation: cam cubic-bezier(0.4, 0, 0.6, 1) both;
+      animation-timeline: --zoom; animation-range: contain 0% contain 100%;
+    }
+  }
+  /* Sem scroll-driven animations: o zoom vira uma transição disparada pela cena ativa. */
+  @supports not ((animation-timeline: view()) and (timeline-scope: --a)) {
+    .cam-img { transition: transform 1800ms var(--ease-arch); }
+    .cam[data-near="true"] .cam-img { transform: translate(var(--tx), var(--ty)) scale(var(--s)); }
+  }
 
   @supports (animation-timeline: scroll()) {
     .scroll-progress {
@@ -109,6 +140,7 @@ dialog[open] { animation: rise 200ms cubic-bezier(0.2, 0.8, 0.2, 1); }
   }
 }
 
+@keyframes cam { to { transform: translate(var(--tx), var(--ty)) scale(var(--s)); } }
 @keyframes intro-fade { from { opacity: 0; } }
 @keyframes intro-line { from { transform: translateY(105%); } }
 @keyframes intro-clip { from { clip-path: inset(5% 5% 5% 5% round 12px); } to { clip-path: inset(0 round 12px); } }

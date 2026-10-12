@@ -27,6 +27,7 @@ function PropertyCard({ p, index, featured }: { p: PublicProperty; index: number
           fill
           priority={index === 0}
           sizes={featured ? "(min-width: 768px) 58vw, 100vw" : "(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"}
+          style={{ objectPosition: p.capa.pos }}
           className="object-cover ease-arch transition-transform duration-[1600ms] group-hover:scale-[1.06] motion-reduce:transition-none"
         />
       </Link>
