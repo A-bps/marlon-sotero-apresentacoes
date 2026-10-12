@@ -18,7 +18,7 @@ export const viewport: Viewport = { themeColor: "#f8fafc" };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Renderização por requisição: necessária para o nonce da CSP (ver src/proxy.ts).
-  await connection();
+  if (!process.env.PAGES) await connection();
   return (
     <html lang="pt-BR" suppressHydrationWarning className={`${inter.variable} ${outfit.variable}`}>
       <body>

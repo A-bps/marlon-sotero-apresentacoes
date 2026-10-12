@@ -9,12 +9,22 @@ const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
 ];
 
+// Prévia estática para o GitHub Pages (PAGES=1): sem servidor, sem API e sem cabeçalhos próprios.
+const pages = process.env.PAGES
+  ? { output: "export" as const, basePath: process.env.NEXT_PUBLIC_BASE_PATH, trailingSlash: true, images: { unoptimized: true } }
+  : {};
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: { formats: ["image/avif", "image/webp"] },
-  async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
-  },
+  ...(process.env.PAGES
+    ? {}
+    : {
+        async headers() {
+          return [{ source: "/:path*", headers: securityHeaders }];
+        },
+      }),
+  ...pages,
   turbopack: {
     rules: {
       "*.css": {

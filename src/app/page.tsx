@@ -5,7 +5,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { Footer, Logo, propertyFacts } from "@/components/brand";
 import { CopyLinkButton } from "@/components/interactive";
-import { broker, getPublishedProperties, type PublicProperty } from "@/data/properties";
+import { BASE, broker, getPublishedProperties, type PublicProperty } from "@/data/properties";
 
 function PropertyCard({ p, index, featured }: { p: PublicProperty; index: number; featured: boolean }) {
   const facts = propertyFacts(p);
@@ -71,7 +71,7 @@ function PropertyCard({ p, index, featured }: { p: PublicProperty; index: number
 const INTRO = `try{if(!sessionStorage.getItem("ms-intro")){document.documentElement.dataset.intro="";sessionStorage.setItem("ms-intro","1")}}catch(e){}`;
 
 export default async function Home() {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const nonce = process.env.PAGES ? undefined : ((await headers()).get("x-nonce") ?? undefined);
   const properties = getPublishedProperties();
   const single = properties.length === 1;
 
@@ -103,7 +103,7 @@ export default async function Home() {
           </div>
           <figure className="md:col-span-5">
             <div className="intro-clip relative aspect-[5/4] overflow-hidden rounded-xl bg-mist md:aspect-[4/5] lg:aspect-[5/4]">
-              <Image src="/marlon/perfil-wide.png" alt="Marlon Sotero em seu escritório" fill priority sizes="(min-width: 768px) 42vw, 100vw" className="object-cover object-[50%_30%]" />
+              <Image src={`${BASE}/marlon/perfil-wide.png`} alt="Marlon Sotero em seu escritório" fill priority sizes="(min-width: 768px) 42vw, 100vw" className="object-cover object-[50%_30%]" />
             </div>
             <figcaption style={{ "--i": 6 } as React.CSSProperties} className="intro-fade mt-3 flex items-baseline justify-between gap-4 text-sm">
               <span className="font-medium text-ink">{broker.nome}</span>

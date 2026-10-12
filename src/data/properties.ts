@@ -77,10 +77,15 @@ export const broker = {
   telefone: "(17) 99210-4000",
   endereco: "Avenida Sílvio Dela Rovere, nº 720, sala 12 — Jardim Yolanda, São José do Rio Preto/SP",
   site: "https://marlonsoterocorretor.com.br",
-  foto: "/marlon/perfil.png",
+  foto: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/marlon/perfil.png`,
 };
 
-const img = (f: string) => `/imoveis/exemplo/${f}`;
+// Prefixo só usado na prévia estática do GitHub Pages (site em /<repositório>/); vazio no build normal.
+export const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+export const allSlugs = () => properties.filter((p) => p.status !== "rascunho").map((p) => p.slug);
+
+const img = (f: string) => `${BASE}/imoveis/exemplo/${f}`;
 
 const properties: Property[] = [
   {

@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Unavailable } from "@/components/brand";
 import { PropertyPage } from "@/components/PropertyPage";
-import { getProperty } from "@/data/properties";
+import { allSlugs, getProperty } from "@/data/properties";
+
+export const generateStaticParams = () => (process.env.PAGES ? allSlugs().map((slug) => ({ slug })) : []);
 
 type Props = { params: Promise<{ slug: string }> };
 
