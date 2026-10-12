@@ -1,8 +1,8 @@
-import { ArrowDown, ArrowLeft, ArrowUpRight, Images, MapPin, MessageCircle, Share2 } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowUpRight, MapPin, MessageCircle, Share2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { broker, type Beat, type PublicProperty } from "@/data/properties";
+import { broker, type PublicProperty } from "@/data/properties";
 import { contactMessage, Footer, Logo, propertyFacts, waLink } from "./brand";
 import { LeadDialog, SectionNav, ShareDialog } from "./interactive";
 import { Amenities, Gallery, Plans } from "./modules";
@@ -11,26 +11,36 @@ import { Story } from "./Story";
 type Mode = "broker" | "client";
 
 /**
- * Área visual principal. Com `beats`, é o hero em tela cheia com percurso (Story: câmera até a porta
- * e depois para dentro); sem eles, mostra só a capa em tela cheia. O visualizador 3D (`model`) entra
+ * Hero: só a capa, em tela cheia sob o cabeçalho. A seção é um pouco mais alta que a tela (pin curto)
+ * e a foto faz um zoom leve em direção a `cover.foco` enquanto ela passa (CSS guiado pelo scroll,
+ * só transform; sem suporte ou com reduced-motion fica estática). O visualizador 3D (`model`) entra
  * no lugar da imagem, mantendo a capa como fallback/poster.
  */
 export function PropertyStage({
-  cover, model, nome, beats, intro,
-}: { cover: { src: string; alt: string; pos?: string }; model?: string; nome: string; beats?: Beat[]; intro: ReactNode }) {
-  if (beats) return <Story beats={beats} intro={intro} model={model} />;
+  cover, model, intro, aviso,
+}: { cover: { src: string; alt: string; pos?: string; foco?: string }; model?: string; intro: ReactNode; aviso?: string }) {
   return (
-    <div className="relative h-[calc(100svh-64px)] min-h-[420px] overflow-hidden bg-mist md:h-[calc(100svh-72px)]" data-model={model ? "pending" : undefined}>
-      {/* Slot do visualizador 3D: renderizar <Viewer3D src={model} poster={cover.src} /> aqui. */}
-      <Image src={cover.src} alt={cover.alt} fill priority sizes="100vw" style={{ objectPosition: cover.pos }} className="stage-media object-cover" />
-      <div className="absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-[#0a1230]/80 via-[#0a1230]/30 to-transparent" aria-hidden />
-      <div className="page-x absolute inset-x-0 bottom-0 mx-auto flex max-w-[1320px] items-end justify-between gap-4 pb-6 md:pb-10">
-        <div className="min-w-0">{intro}</div>
-        <a href="#galeria" className="btn shrink-0 bg-white text-navy shadow-sm hover:bg-paper">
-          <Images className="size-4" aria-hidden /> <span className="sr-only md:not-sr-only">Ver galeria</span><span className="sr-only">{nome}</span>
-        </a>
+    <section aria-label="Capa" className="hero relative h-[150svh]" data-model={model ? "pending" : undefined}>
+      <div className="sticky top-16 h-[calc(100svh-64px)] min-h-[420px] overflow-hidden bg-mist md:top-[72px] md:h-[calc(100svh-72px)]">
+        {/* Slot do visualizador 3D: renderizar <Viewer3D src={model} poster={cover.src} /> aqui. */}
+        <Image
+          src={cover.src}
+          alt={cover.alt}
+          fill
+          priority
+          sizes="100vw"
+          style={{ objectPosition: cover.pos, transformOrigin: cover.foco }}
+          className="hero-media object-cover"
+        />
+        {aviso && (
+          <p className="page-x absolute inset-x-0 top-0 z-10 border-b border-gold/40 bg-[#fbf6e9]/95 py-2 text-center text-[13px] text-[#5c4716]">{aviso}</p>
+        )}
+        <div className="absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-[#0a1230]/85 via-[#0a1230]/40 via-50% to-transparent" aria-hidden />
+        <div className="absolute inset-x-0 bottom-0 pb-24 md:pb-14">
+          <div className="page-x mx-auto max-w-[1320px]">{intro}</div>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -73,11 +83,9 @@ export function PropertyPage({ property: p, mode }: { property: PublicProperty; 
       </p>
       <h1 className="mt-2 max-w-[14ch] font-display text-[34px] leading-[1.04] font-semibold tracking-[-0.02em] text-white [text-shadow:0_2px_24px_rgb(10_18_48/0.5)] md:mt-3 md:text-[56px] lg:text-[72px]">{p.nome}</h1>
       <p className="mt-4 hidden max-w-xl text-[17px] text-white [text-shadow:0_1px_14px_rgb(10_18_48/0.55)] md:block md:text-lg">{p.descricaoCurta}</p>
-      {p.narrativa && (
-        <p className="mt-5 flex items-center gap-2 text-xs tracking-[0.18em] text-white uppercase [text-shadow:0_1px_14px_rgb(10_18_48/0.55)] md:mt-8">
-          Role para entrar <ArrowDown className="size-3.5" aria-hidden />
-        </p>
-      )}
+      <p className="mt-5 flex items-center gap-2 text-xs tracking-[0.18em] text-white uppercase [text-shadow:0_1px_14px_rgb(10_18_48/0.55)] md:mt-8">
+        Role para continuar <ArrowDown className="size-3.5" aria-hidden />
+      </p>
     </>
   );
   const bbox = [p.lng - 0.012, p.lat - 0.007, p.lng + 0.012, p.lat + 0.007].join(",");
@@ -122,13 +130,13 @@ export function PropertyPage({ property: p, mode }: { property: PublicProperty; 
       </header>
 
       <main id="conteudo" className={mode === "client" ? "pb-24 md:pb-0" : undefined}>
-        {p.exemplo && (
-          <p className="page-x border-b border-gold/40 bg-[#fbf6e9] py-2.5 text-center text-[13px] text-[#5c4716]">
-            Apresentação modelo: textos, imagens e plantas são ilustrativos.
-          </p>
-        )}
         <div aria-hidden className="scroll-progress fixed inset-x-0 top-0 z-50 h-0.5 bg-gold" />
-        <PropertyStage cover={p.capa} model={p.modelo3d} nome={p.nome} beats={p.narrativa} intro={p.narrativa ? <div className="page-x mx-auto w-full max-w-[1320px]">{introBody}</div> : introBody} />
+        <PropertyStage
+          cover={p.capa}
+          model={p.modelo3d}
+          intro={introBody}
+          aviso={p.exemplo ? "Apresentação modelo: textos, imagens e plantas são ilustrativos." : undefined}
+        />
 
         <div className="page-x mx-auto grid max-w-[1320px] gap-6 py-10 md:py-14 lg:grid-cols-12 lg:items-end lg:gap-8">
           {facts.length > 0 && (
@@ -156,6 +164,8 @@ export function PropertyPage({ property: p, mode }: { property: PublicProperty; 
             )}
           </div>
         </div>
+
+        {p.narrativa && <Story beats={p.narrativa} />}
 
         <SectionNav items={modules.map(({ id, label }) => ({ id, label }))} />
 

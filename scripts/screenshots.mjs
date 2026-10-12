@@ -21,7 +21,7 @@ for (const w of [360, 768, 1440]) {
     await page.screenshot({ path: `screenshots/${name}-${w}.png`, fullPage: true });
     if (name === "publico") {
       // Estados intermediários do percurso (scrollytelling).
-      const beats = page.locator("[aria-label=\"Percurso pelo empreendimento\"] article");
+      const beats = page.locator("[aria-label=\"Percurso pelo empreendimento\"] li[data-i]");
       for (let k = 0; k < (await beats.count()); k++) {
         await beats.nth(k).evaluate((el) => el.scrollIntoView({ block: "center" }));
         await page.waitForTimeout(1100);

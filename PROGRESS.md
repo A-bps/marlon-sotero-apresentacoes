@@ -53,3 +53,20 @@
 - **Correção de um 500 em produção:** o commit da prévia estática exportava `generateStaticParams` (vazio) também no build normal, o que tornava `/p/[slug]` e `/imovel/[slug]` estáticas e quebrava com `DYNAMIC_SERVER_USAGE` por causa do `connection()` do layout (nonce da CSP). Agora o export só existe com `PAGES=1`.
 - **Validado:** tsc, lint, 14 testes, build normal e build `PAGES=1` (em cópia temporária, sem `src/app/api` e `src/proxy.ts`); caminhos com o prefixo BASE e zoom conferidos servindo `out/` sob `/Marlon-Sistema/`. LCP ~330 ms (a própria foto, também sem JS), CLS 0. Fluxos Playwright (compartilhar, menu, galeria, plantas, áreas comuns, formulário, 404/pausado) e cabeçalhos de segurança ok. `npm audit --omit=dev`: 0.
 - **Observação:** durante o scroll com CPU 4x mais lenta há 2 a 3 tarefas longas de 70 a 150 ms (decodificação/raster das camadas); em CPU normal ficam abaixo de 40 ms. Na prévia estática o `<Link>` do hub dispara um prefetch RSC que dá 404 no console (anterior a esta mudança, inofensivo).
+
+## v1.3: hero só com a fachada e percurso dos ambientes separado
+- **Pedido do usuário:** a fachada e os ambientes internos não podem dividir o mesmo scroll fixo. A versão v1.2 (câmera até a porta e entrada no interior dentro do hero) foi desfeita.
+- **Hero** (`PropertyStage`): só `fachada-casa.jpg`, em tela cheia sob o cabeçalho, com nome e localização sobre a foto e a dica "Role para continuar".
+  - A seção tem 150svh com o palco fixo de 100svh, então o pin é curto (cerca de meia tela).
+  - Enquanto a seção passa, a foto faz um zoom leve de 1 para 1,13 em direção à entrada (`capa.foco`). É uma animação guiada pelo scroll (`view-timeline` na própria seção, faixa `contain`), só com transform.
+  - Sem suporte, ou com `prefers-reduced-motion`, fica estática. A imagem LCP não depende de JS.
+  - O recorte usa `object-fit: cover` com `capa.pos`. O aviso "Apresentação modelo" agora fica sobre o topo do palco, para que o hero ocupe exatamente a tela no mobile (antes ele empurrava o título para baixo da barra fixa).
+- **Percurso dos ambientes:** `Story.tsx` restaurado da versão 51f1d79 (imagem fixa de um lado, frases curtas rolando ao lado) e posicionado depois da ficha, com "Viver por dentro", "O lazer em casa" e "O entorno".
+- **Removido:** a maquinaria da câmera (`Beat.camera`, `.cam`/`.cam-img`, `timeline-scope`/`zoom-zone`, keyframes `cam`), o parallax antigo `.stage-media` e as cenas "A chegada"/"Entrar".
+- **Inalterados:** card do hub, galeria (fachada continua a 1ª imagem), plantas, áreas comuns, mapa, compartilhar, formulário, âncoras do menu e prévia do Pages.
+- **Validado:**
+  - tsc, lint, 14 testes, build normal + `next start` (`/`, `/imovel/…` e `/p/…` retornam 200; `/p/nao-existe` retorna 404; os 6 cabeçalhos de segurança presentes) e build `PAGES=1` em cópia temporária (sem referências sem o prefixo BASE).
+  - Capturas em 360/768/1440 no início do hero, no meio do zoom, no fim do zoom, logo após o hero e em 3 pontos do percurso.
+  - LCP de ~130 ms (a foto do hero, que também aparece sem JS) e CLS 0.
+  - Fluxos Playwright ok.
+  - `npm audit --omit=dev`: 0.
